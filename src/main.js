@@ -1,5 +1,4 @@
 window.addEventListener("DOMContentLoaded", async () => {
-  // Initialize Jukehost integration for URL token processing
   if (window.jukehostIntegration) {
     window.jukehostIntegration.init();
   }
@@ -149,7 +148,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       const originalHTML = saveUsernameBtn.innerHTML;
       saveUsernameBtn.innerHTML =
-        '<span class="material-symbols-rounded">check</span>';
+        '<span translate="no" class="material-symbols-rounded">check</span>';
       setTimeout(() => {
         saveUsernameBtn.innerHTML = originalHTML;
       }, 1000);
@@ -237,7 +236,9 @@ window.addEventListener("DOMContentLoaded", async () => {
         try {
           window.melechLibrary.clearDOM();
           await window.melechLibrary.loadLibrary();
-        } catch (err) { console.error(err); }
+        } catch (err) {
+          console.error(err);
+        }
       }
     }
   });
@@ -349,7 +350,10 @@ if ("serviceWorker" in navigator) {
       reg.addEventListener("updatefound", () => {
         const newWorker = reg.installing;
         newWorker.addEventListener("statechange", () => {
-          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+          if (
+            newWorker.state === "installed" &&
+            navigator.serviceWorker.controller
+          ) {
             console.log("New SW available, reloading...");
             window.location.reload();
           }

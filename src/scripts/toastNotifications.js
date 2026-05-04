@@ -208,12 +208,12 @@ class ToastNotifications {
       }
     }
 
-    const iconHtml = `<div class="toast-icon"><span class="material-symbols-rounded">${iconMap[type]}</span></div>`;
+    const iconHtml = `<div class="toast-icon"><span translate="no" class="material-symbols-rounded">${iconMap[type]}</span></div>`;
     const titleHtml = displayTitle
       ? `<h4 class="toast-title">${this.escapeHtml(displayTitle)}</h4>`
       : "";
     const messageHtml = `<p class="toast-message">${this.escapeHtml(displayMessage)}</p>`;
-    const closeHtml = `<button class="toast-close" aria-label="Close"><span class="material-symbols-rounded">close</span></button>`;
+    const closeHtml = `<button class="toast-close" aria-label="Close"><span translate="no" class="material-symbols-rounded">close</span></button>`;
     toast.innerHTML = `${iconHtml}<div class="toast-content">${titleHtml}${messageHtml}</div>${closeHtml}`;
 
     const progress = document.createElement("div");

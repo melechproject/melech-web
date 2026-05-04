@@ -14,7 +14,7 @@ class JukehostIntegration {
   async loadPlaylistNames() {
     try {
       const currentLang = localStorage.getItem("melech-language") || "tr";
-      const basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
+      const basePath = window.location.pathname.replace(/\/[^/]*$/, "/");
       const response = await fetch(
         `${basePath}language/playlist-names/${currentLang}.json`,
       );
@@ -152,11 +152,11 @@ class JukehostIntegration {
                 <p class="text-white/60 text-sm mb-6" data-i18n="jukehost.choiceDescription">${t("jukehost.choiceDescription")}</p>
                 <div class="flex flex-col gap-3">
                     <button id="useBtn" class="w-full py-3 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2 group">
-                        <span class="material-symbols-rounded group-hover:scale-110 transition-transform">play_circle</span>
+                        <span translate="no" class="material-symbols-rounded group-hover:scale-110 transition-transform">play_circle</span>
                         <span data-i18n="jukehost.use">${t("jukehost.use")}</span>
                     </button>
                     <button id="qrBtn" class="w-full py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-medium transition-all flex items-center justify-center gap-2 group">
-                        <span class="material-symbols-rounded group-hover:scale-110 transition-transform">qr_code_2</span>
+                        <span translate="no" class="material-symbols-rounded group-hover:scale-110 transition-transform">qr_code_2</span>
                         <span data-i18n="jukehost.generateQR">${t("jukehost.generateQR")}</span>
                     </button>
 
@@ -223,7 +223,7 @@ class JukehostIntegration {
                 <div class="bg-white/5 p-3 py-1 rounded-xl mb-3 flex items-center gap-2">
                     <p class="text-white/40 text-[10px] break-all text-left flex-1 line-clamp-1">${fullUrl}</p>
                     <button id="copyUrlBtn" class="p-2 hover:bg-white/10 rounded-lg text-white/60 transition-all" data-i18n-attr="title" data-i18n="jukehost.copyUrl" title="${t("jukehost.copyUrl")}">
-                        <span class="material-symbols-rounded text-sm">content_copy</span>
+                        <span translate="no" class="material-symbols-rounded text-sm">content_copy</span>
                     </button>
                 </div>
 
@@ -551,7 +551,7 @@ class JukehostIntegration {
                 <div class="mb-6">
                     <div id="jukehost-spinner" class="w-16 h-16 border-4 border-[var(--primary-color)]/30 border-t-[var(--primary-color)] rounded-full animate-spin mx-auto"></div>
                     <div id="jukehost-icon" class="hidden text-6xl mb-2">
-                        <span class="material-symbols-rounded" id="jukehost-status-icon">check_circle</span>
+                        <span translate="no" class="material-symbols-rounded" id="jukehost-status-icon">check_circle</span>
                     </div>
                 </div>
                 <h3 class="text-xl font-semibold text-white mb-2" id="jukehost-title">Jukehost Transfer</h3>

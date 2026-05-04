@@ -24,14 +24,14 @@ class PlaylistShare {
                             <div class="flex items-center justify-between mb-3">
                                 <h3 class="text-xl font-semibold text-white" data-i18n="share.shareTitle">Share Playlist</h3>
                                 <button id="closeShareModal" class="p-2 hover:bg-white/10 rounded-full transition-all">
-                                    <span class="material-symbols-rounded text-white/60">close</span>
+                                    <span translate="no" class="material-symbols-rounded text-white/60">close</span>
                                 </button>
                             </div>
                             
                             <div id="shareContent">
                                 <div id="sharePlaylistInfo" class="mb-4 p-3 bg-white/5 rounded-xl">
                                     <div class="flex items-center gap-3" id="shareItemIcon">
-                                        <span class="material-symbols-rounded text-[var(--primary-color)]">playlist_play</span>
+                                        <span translate="no" class="material-symbols-rounded text-[var(--primary-color)]">playlist_play</span>
                                         <div>
                                             <p class="text-white font-medium" id="sharePlaylistName">User Playlist</p>
                                             <p class="text-white/50 text-sm" id="sharePlaylistStats">0 songs</p>
@@ -41,7 +41,7 @@ class PlaylistShare {
                                 
                                 <div class="flex gap-2 mb-4">
                                     <button id="confirmShareBtn" class="flex-1 py-3 px-4 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all">
-                                        <span class="material-symbols-rounded inline mr-2">share</span>
+                                        <span translate="no" class="material-symbols-rounded inline mr-2">share</span>
                                         <span data-i18n="playlist.share">Share</span>
                                     </button>
                                 </div>
@@ -52,7 +52,7 @@ class PlaylistShare {
                             <div id="shareResult" class="hidden">
                                 <div class="p-4 bg-green-500/10 border border-green-500/30 rounded-xl mb-4">
                                     <div class="flex items-center gap-2 mb-2">
-                                        <span class="material-symbols-rounded text-green-400">check_circle</span>
+                                        <span translate="no" class="material-symbols-rounded text-green-400">check_circle</span>
                                         <span class="text-green-400 font-medium" data-i18n="share.shareSuccess">Share Successful!</span>
                                     </div>
                                     <p class="text-white/70 text-sm" data-i18n="share.shareSuccessMessage">Your share will be active for 30 minutes.</p>
@@ -62,7 +62,7 @@ class PlaylistShare {
                                     <input type="text" id="shareUrlInput" readonly
                                         class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
                                     <button id="copyShareUrlBtn" class="px-4 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all">
-                                        <span class="material-symbols-rounded">content_copy</span>
+                                        <span translate="no" class="material-symbols-rounded">content_copy</span>
                                     </button>
                                 </div>
                                 
@@ -71,7 +71,7 @@ class PlaylistShare {
                             
                             <div id="shareError" class="hidden p-4 bg-red-500/10 border border-red-500/30 rounded-xl mt-4">
                                 <div class="flex items-center gap-2">
-                                    <span class="material-symbols-rounded text-red-400">error</span>
+                                    <span translate="no" class="material-symbols-rounded text-red-400">error</span>
                                     <span class="text-red-400 font-medium" id="shareErrorText" data-i18n="share.shareFailed">Share Failed</span>
                                 </div>
                             </div>
@@ -94,7 +94,7 @@ class PlaylistShare {
                             <div class="flex items-center justify-between mb-3">
                                 <h3 id="importModalTitle" class="text-xl font-semibold text-white" data-i18n="share.sharingText">Sharing</h3>
                                 <button id="closeImportModal" class="p-2 hover:bg-white/10 rounded-full transition-all">
-                                    <span class="material-symbols-rounded text-white/60">close</span>
+                                    <span translate="no" class="material-symbols-rounded text-white/60">close</span>
                                 </button>
                             </div>
                             
@@ -119,7 +119,7 @@ class PlaylistShare {
 
                                 <div id="importSongInfo" class="p-3 bg-white/5 rounded-xl mb-4 hidden">
                                     <div class="flex items-center gap-3">
-                                        <span class="material-symbols-rounded text-[var(--primary-color)]">music_note</span>
+                                        <span translate="no" class="material-symbols-rounded text-[var(--primary-color)]">music_note</span>
                                         <div>
                                             <p class="text-white font-medium" id="importSongTitle">Untitled Song</p>
                                             <p class="text-white/50 text-sm" id="importSongArtist">Unknown Artist</p>
@@ -136,7 +136,7 @@ class PlaylistShare {
                                         Cancel
                                     </button>
                                     <button id="confirmImportBtn" class="flex-1 py-3 px-4 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all">
-                                        <span class="material-symbols-rounded inline mr-2">library_add</span>
+                                        <span translate="no" class="material-symbols-rounded inline mr-2">library_add</span>
                                         <span data-i18n="playlist.addToLibrary">Add</span>
                                     </button>
                                 </div>
@@ -144,7 +144,7 @@ class PlaylistShare {
                             
                             <div id="importError" class="hidden p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
                                 <div class="flex items-center gap-2">
-                                    <span class="material-symbols-rounded text-red-400">error</span>
+                                    <span translate="no" class="material-symbols-rounded text-red-400">error</span>
                                     <span class="text-red-400 font-medium" id="importErrorText">Import Failed</span>
                                 </div>
                                 <p class="text-white/70 text-sm mt-2" id="importErrorDetail"></p>
@@ -690,7 +690,7 @@ class PlaylistShare {
     const btn = document.getElementById("copyShareUrlBtn");
     const originalIcon = btn.innerHTML;
     btn.innerHTML =
-      '<span class="material-symbols-rounded text-green-400">check</span>';
+      '<span translate="no" class="material-symbols-rounded text-green-400">check</span>';
 
     setTimeout(() => {
       btn.innerHTML = originalIcon;
@@ -779,7 +779,7 @@ class PlaylistShare {
           ? window.t("playlist.addToLibrary")
           : "Add to Library";
         if (confirmBtn) {
-          confirmBtn.innerHTML = `<span class="material-symbols-rounded inline mr-2">playlist_add</span>${addToLibraryText}`;
+          confirmBtn.innerHTML = `<span translate="no" class="material-symbols-rounded inline mr-2">playlist_add</span>${addToLibraryText}`;
         }
       } else {
         this.pendingImportType = "song";
@@ -814,7 +814,7 @@ class PlaylistShare {
           ? window.t("playlist.addToLibrary")
           : "Add to Library";
         if (confirmBtn) {
-          confirmBtn.innerHTML = `<span class="material-symbols-rounded inline mr-2">library_add</span>${addToLibraryText}`;
+          confirmBtn.innerHTML = `<span translate="no" class="material-symbols-rounded inline mr-2">library_add</span>${addToLibraryText}`;
         }
       }
 
@@ -882,7 +882,7 @@ class PlaylistShare {
         ? window.t("playlist.addToLibrary")
         : "Add to Library";
       if (confirmBtn) {
-        confirmBtn.innerHTML = `<span class="material-symbols-rounded inline mr-2">playlist_add</span>${addToLibraryText}`;
+        confirmBtn.innerHTML = `<span translate="no" class="material-symbols-rounded inline mr-2">playlist_add</span>${addToLibraryText}`;
       }
 
       document.getElementById("importLoading").classList.add("hidden");
@@ -925,7 +925,9 @@ class PlaylistShare {
           if (song) {
             return { data: song, source: "supabase" };
           }
-        } catch (err) { console.error(err); }
+        } catch (err) {
+          console.error(err);
+        }
         return { data: { audioBlob: data }, source: "supabase" };
       } else {
         return { data: data };
@@ -1022,7 +1024,7 @@ class PlaylistShare {
         ? window.t("playlist.addToLibrary")
         : "Add to Library";
       if (confirmBtn) {
-        confirmBtn.innerHTML = `<span class="material-symbols-rounded inline mr-2">library_add</span>${addToLibraryText}`;
+        confirmBtn.innerHTML = `<span translate="no" class="material-symbols-rounded inline mr-2">library_add</span>${addToLibraryText}`;
       }
 
       document.getElementById("importLoading").classList.add("hidden");
@@ -1044,7 +1046,7 @@ class PlaylistShare {
     const btn = document.getElementById("confirmImportBtn");
     const originalText = btn.innerHTML;
     btn.innerHTML =
-      '<span class="material-symbols-rounded inline mr-2 animate-spin">refresh</span>';
+      '<span translate="no" class="material-symbols-rounded inline mr-2 animate-spin">refresh</span>';
     btn.disabled = true;
 
     try {

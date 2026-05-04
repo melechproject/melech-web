@@ -174,7 +174,7 @@
                 </h2>
                 <button id="playlistCloseBtn" aria-label="Close" data-i18n-aria="upload.close"
                     class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-all">
-                    <span class="material-symbols-rounded text-white">close</span>
+                    <span translate="no" class="material-symbols-rounded text-white">close</span>
                 </button>
             </div>
 
@@ -208,12 +208,12 @@
                     style="max-width: 0; overflow: hidden; overflow-x: auto;">
                     <button id="createPlaylistBtn"
                         class="flex items-center gap-2 px-4 py-2.5 text-white rounded-full text-sm font-medium transition-all shrink-0">
-                        <span class="material-symbols-rounded text-lg">add</span>
+                        <span translate="no" class="material-symbols-rounded text-lg">add</span>
                         <span data-i18n="playlist.newPlaylist">New Playlist</span>
                     </button>
                     <button id="importPlaylistBtn"
                         class="flex items-center gap-2 px-4 py-2.5 text-white rounded-full text-sm font-medium transition-all shrink-0">
-                        <span class="material-symbols-rounded text-lg">upload</span>
+                        <span translate="no" class="material-symbols-rounded text-lg">upload</span>
                         <span data-i18n="playlist.import">Import</span>
                     </button>
                 </div>
@@ -223,23 +223,23 @@
 
     <div id="menuOverlay" role="dialog" aria-modal="true" aria-label="Quick Access" data-i18n-aria="nav.menu">
         <button id="menuCloseBtn" aria-label="Close Menu" data-i18n-aria="nav.closeMenu">
-            <span class="material-symbols-rounded" translate="no">close</span>
+            <span translate="no" class="material-symbols-rounded" translate="no">close</span>
         </button>
         <a href="#" id="mobileRadioBtn" class="flex items-center gap-2 text-lg text-white">
-            <span class="material-symbols-rounded text-4xl" translate="no">
+            <span translate="no" class="material-symbols-rounded text-4xl" translate="no">
                 radio
             </span>
             <span data-i18n="nav.radio">Radio</span>
         </a>
         <a id="donateBtn" href="https://buymeacoffee.com/xmer" target="_blank"
             class="flex items-center gap-2 text-lg text-white">
-            <span class="material-symbols-rounded text-4xl" translate="no">
+            <span translate="no" class="material-symbols-rounded text-4xl" translate="no">
                 volunteer_activism
             </span>
             <span data-i18n="nav.donate">Donate</span>
         </a>
         <a href="about/" target="_blank" class="flex items-center gap-2 text-lg text-white">
-            <span class="material-symbols-rounded text-4xl" translate="no">
+            <span translate="no" class="material-symbols-rounded text-4xl" translate="no">
                 help
             </span>
             <span data-i18n="nav.about">About</span>
@@ -259,31 +259,36 @@
                     <div class="flex items-center">
                         <div class="nav-links mr-2">
                             <a href="#" id="desktopRadioBtn" class="flex items-center text-white">
-                                <span class="material-symbols-rounded text-2xl" translate="no">radio</span>
+                                <span translate="no" class="material-symbols-rounded text-2xl"
+                                    translate="no">radio</span>
                             </a>
                             <a class="donate-btn flex items-center text-white" id="donateBtn"
                                 href="https://buymeacoffee.com/xmer" target="_blank">
-                                <span class="material-symbols-rounded text-2xl" translate="no">volunteer_activism</span>
+                                <span translate="no" class="material-symbols-rounded text-2xl"
+                                    translate="no">volunteer_activism</span>
                             </a>
                             <a href="about/" target="_blank" class="flex items-center text-white mr-2">
-                                <span class="material-symbols-rounded text-2xl" translate="no">help</span>
+                                <span translate="no" class="material-symbols-rounded text-2xl"
+                                    translate="no">help</span>
                             </a>
                         </div>
 
                         <button id="menuControlBtn" aria-label="Open Menu" aria-expanded="false"
                             aria-controls="menuOverlay">
-                            <span class="material-symbols-rounded text-white" translate="no">menu</span>
+                            <span translate="no" class="material-symbols-rounded text-white" translate="no">menu</span>
                         </button>
 
                         <button id="playlistMenuBtn" aria-label="Playlists" data-i18n-aria="nav.playlists"
                             aria-expanded="false"
                             class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all">
-                            <span class="material-symbols-rounded text-white" translate="no">queue_music</span>
+                            <span translate="no" class="material-symbols-rounded text-white"
+                                translate="no">queue_music</span>
                         </button>
 
                         <button id="settingsBtnMain" aria-label="Settings"
                             class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all ml-2">
-                            <span class="material-symbols-rounded text-white" translate="no">settings</span>
+                            <span translate="no" class="material-symbols-rounded text-white"
+                                translate="no">settings</span>
                         </button>
                     </div>
                 </nav>
@@ -315,11 +320,11 @@
                         <button id="mobileSearchToggle" type="button"
                             class="hidden p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors text-white/70 hover:text-white"
                             aria-label="Search" aria-expanded="false">
-                            <span class="material-symbols-rounded" translate="no">search</span>
+                            <span translate="no" class="material-symbols-rounded" translate="no">search</span>
                         </button>
                         <button id="refreshLibrary"
                             class="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors text-white/70 hover:text-white">
-                            <span class="material-symbols-rounded" translate="no">refresh</span>
+                            <span translate="no" class="material-symbols-rounded" translate="no">refresh</span>
                         </button>
                     </div>
                 </div>
@@ -351,7 +356,7 @@
                 <img id="sidePlayerImage" src="" alt=""
                     class="w-full h-full object-cover opacity-0 transition-opacity duration-500">
                 <div id="sidePlayerPlaceholder" class="absolute inset-0 flex items-center justify-center text-white/20">
-                    <span class="material-symbols-rounded !text-6xl">music_note</span>
+                    <span translate="no" class="material-symbols-rounded !text-6xl">music_note</span>
                 </div>
 
                 <div class="track-loading-overlay hidden" id="sidePlayerLoading">
@@ -367,7 +372,7 @@
                 </div>
                 <button id="sidePlayerFavoriteBtn"
                     class="p-2 text-white/40 hover:text-white transition-all transform active:scale-90 opacity-0 pointer-events-none shrink-0">
-                    <span class="material-symbols-rounded !text-2xl">favorite</span>
+                    <span translate="no" class="material-symbols-rounded !text-2xl">favorite</span>
                 </button>
             </div>
             <div class="pt-3 border-t border-white/5 flex flex-col min-h-0">
@@ -408,11 +413,11 @@
             <div class="flex items-center gap-0">
                 <button id="favoriteMiniPlayerBtn"
                     class="w-10 h-10 flex items-center justify-center text-white/40 active:scale-90 transition-all">
-                    <span class="material-symbols-rounded !text-xl">favorite</span>
+                    <span translate="no" class="material-symbols-rounded !text-xl">favorite</span>
                 </button>
                 <button id="miniPlayPauseBtn"
                     class="w-10 h-10 flex items-center justify-center text-white active:scale-90 transition-all">
-                    <span class="material-symbols-rounded !text-2xl">play_arrow</span>
+                    <span translate="no" class="material-symbols-rounded !text-2xl">play_arrow</span>
                 </button>
             </div>
         </div>
@@ -425,7 +430,7 @@
         class="lg:hidden fixed inset-0 z-[100] bg-[#140004] translate-y-full transition-transform duration-500 flex flex-col">
         <div class="flex items-center justify-between p-4 pt-safe-top">
             <button id="closeFullPlayerBtn" class="p-2 text-white/50 hover:text-white transition-colors">
-                <span class="material-symbols-rounded !text-3xl">expand_more</span>
+                <span translate="no" class="material-symbols-rounded !text-3xl">expand_more</span>
             </button>
         </div>
 
@@ -445,7 +450,7 @@
                 <div class="flex items-center justify-center gap-2">
                     <p id="fullPlayerArtist" class="text-base text-white/60 truncate max-w-[70%]">Artist Name</p>
                     <button id="fullPlayerFavoriteBtn" class="text-white/40 active:scale-90 transition-all p-1">
-                        <span class="material-symbols-rounded !text-xl">favorite</span>
+                        <span translate="no" class="material-symbols-rounded !text-xl">favorite</span>
                     </button>
                 </div>
             </div>
@@ -472,22 +477,23 @@
 
                 <div class="flex items-center justify-center gap-3 xs:gap-4 sm:gap-6">
                     <button class="text-white/40 hover:text-white transition-colors p-1 flex-shrink-0">
-                        <span class="material-symbols-rounded !text-xl sm:!text-2xl">shuffle</span>
+                        <span translate="no" class="material-symbols-rounded !text-xl sm:!text-2xl">shuffle</span>
                     </button>
                     <button id="fullPlayerPrevBtn"
                         class="text-white hover:text-white/80 transition-colors p-1 flex-shrink-0">
-                        <span class="material-symbols-rounded !text-3xl sm:!text-4xl">skip_previous</span>
+                        <span translate="no"
+                            class="material-symbols-rounded !text-3xl sm:!text-4xl">skip_previous</span>
                     </button>
                     <button id="fullPlayPauseBtn"
                         class="w-14 h-14 sm:w-16 sm:h-16 bg-white text-black rounded-full flex items-center justify-center shadow-2xl active:scale-95 transition-all hover:scale-105 flex-shrink-0">
-                        <span class="material-symbols-rounded !text-3xl sm:!text-4xl">play_arrow</span>
+                        <span translate="no" class="material-symbols-rounded !text-3xl sm:!text-4xl">play_arrow</span>
                     </button>
                     <button id="fullPlayerNextBtn"
                         class="text-white hover:text-white/80 transition-colors p-1 flex-shrink-0">
-                        <span class="material-symbols-rounded !text-3xl sm:!text-4xl">skip_next</span>
+                        <span translate="no" class="material-symbols-rounded !text-3xl sm:!text-4xl">skip_next</span>
                     </button>
                     <button class="text-white/40 hover:text-white transition-colors p-1 flex-shrink-0">
-                        <span class="material-symbols-rounded !text-xl sm:!text-2xl">repeat</span>
+                        <span translate="no" class="material-symbols-rounded !text-xl sm:!text-2xl">repeat</span>
                     </button>
                 </div>
             </div>
@@ -516,25 +522,28 @@
                     <div class="flex items-center gap-4 md:gap-2 flex-1 md:flex-none justify-center">
                         <button id="replay10Btn"
                             class="text-[var(--button-deactive-color)] hover:text-white transition-colors active:scale-90 p-1">
-                            <span class="material-symbols-rounded !text-xl">replay_10</span>
+                            <span translate="no" class="material-symbols-rounded !text-xl">replay_10</span>
                         </button>
                         <button id="skipPrevBtn"
                             class="text-white/70 hover:text-white hover:scale-110 active:scale-90 transition-all p-2">
-                            <span class="material-symbols-rounded !text-3xl md:!text-2xl">skip_previous</span>
+                            <span translate="no"
+                                class="material-symbols-rounded !text-3xl md:!text-2xl">skip_previous</span>
                         </button>
 
                         <button id="playPauseBtn"
                             class="w-14 h-14 md:w-12 md:h-12 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                            <span class="material-symbols-rounded !text-4xl md:!text-3xl">play_arrow</span>
+                            <span translate="no"
+                                class="material-symbols-rounded !text-4xl md:!text-3xl">play_arrow</span>
                         </button>
 
                         <button id="skipNextBtn"
                             class="text-white/70 hover:text-white hover:scale-110 active:scale-90 transition-all p-2">
-                            <span class="material-symbols-rounded !text-3xl md:!text-2xl">skip_next</span>
+                            <span translate="no"
+                                class="material-symbols-rounded !text-3xl md:!text-2xl">skip_next</span>
                         </button>
                         <button id="forward10Btn"
                             class="text-[var(--button-deactive-color)] hover:text-white transition-colors active:scale-90 p-1">
-                            <span class="material-symbols-rounded !text-xl">forward_10</span>
+                            <span translate="no" class="material-symbols-rounded !text-xl">forward_10</span>
                         </button>
                     </div>
                 </div>
@@ -561,23 +570,27 @@
                     class="flex items-center justify-center md:justify-end gap-5 md:gap-4 order-2 md:order-3 md:w-[30%]">
                     <button id="favoriteFooterBtn"
                         class="hidden lg:flex text-white/40 hover:text-white transition-all transform active:scale-90 p-1 opacity-0 pointer-events-none">
-                        <span class="material-symbols-rounded !text-[22px] md:!text-[20px]">favorite</span>
+                        <span translate="no"
+                            class="material-symbols-rounded !text-[22px] md:!text-[20px]">favorite</span>
                     </button>
 
                     <button id="shuffleBtn"
                         class="text-[var(--button-deactive-color)] hover:text-white transition-all transform active:scale-90 p-1">
-                        <span class="material-symbols-rounded !text-[22px] md:!text-[20px]">shuffle</span>
+                        <span translate="no"
+                            class="material-symbols-rounded !text-[22px] md:!text-[20px]">shuffle</span>
                     </button>
 
                     <button id="loopBtn"
                         class="text-[var(--button-deactive-color)] hover:text-white transition-all transform active:scale-90 p-1 relative">
-                        <span id="loopIcon" class="material-symbols-rounded !text-[22px] md:!text-[20px]">repeat</span>
+                        <span id="loopIcon" translate="no"
+                            class="material-symbols-rounded !text-[22px] md:!text-[20px]">repeat</span>
                     </button>
 
                     <div class="flex items-center gap-3 group">
                         <button id="volumeBtn"
                             class="text-[var(--button-deactive-color)] group-hover:text-white transition-colors p-1">
-                            <span class="material-symbols-rounded !text-[24px] md:!text-[20px]">volume_up</span>
+                            <span translate="no"
+                                class="material-symbols-rounded !text-[24px] md:!text-[20px]">volume_up</span>
                         </button>
                         <div class="flex flex-1 items-center translate-y-[1px]">
                             <input type="range" id="volumeSlider" class="volume-slider w-24" min="0" max="100"
@@ -595,12 +608,12 @@
             <div class="flex items-center justify-between p-4 border-b border-white/10">
                 <button id="playlistDetailPlayBtn"
                     class="flex items-center gap-2 px-4 py-2 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all">
-                    <span class="material-symbols-rounded">play_arrow</span>
+                    <span translate="no" class="material-symbols-rounded">play_arrow</span>
                     <span class="text-sm font-medium whitespace-nowrap" data-i18n="player.play">Play</span>
                 </button>
                 <button id="playlistDetailBackBtn"
                     class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-all">
-                    <span class="material-symbols-rounded text-white">arrow_back</span>
+                    <span translate="no" class="material-symbols-rounded text-white">arrow_back</span>
                 </button>
             </div>
 
@@ -618,33 +631,23 @@
         class="fixed inset-0 z-[80] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
         <div class="absolute inset-0 bg-black/80" id="createPlaylistBackdrop"></div>
         <div
-            class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+            class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-sm mx-4 shadow-2xl transform transition-transform duration-300 scale-100">
             <h3 class="text-xl font-bold text-white mb-4" data-i18n="playlist.createPlaylist">Create Playlist</h3>
-            <div class="flex items-stretch gap-2 h-[105px] mb-4">
+            <div class="flex flex-col gap-3 mb-4">
                 <div class="h-full aspect-square flex-shrink-0">
                     <div id="createPlaylistCoverPreview"
-                        class="relative h-full w-full rounded-xl overflow-hidden cursor-pointer group">
+                        class="relative h-full w-full rounded-xl overflow-hidden cursor-pointer group bg-white/10">
                         <img id="createPlaylistCoverImg" src="./resources/MelechCover.png" alt="Cover"
                             data-i18n-attr="alt" data-i18n="playlist.coverImage" class="w-full h-full object-cover">
-                        <div id="createPlaylistCoverPlaceholder"
-                            class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="material-symbols-rounded !text-4xl mb-2">image</span>
-                        </div>
                         <div
                             class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span class="material-symbols-rounded text-white !text-3xl">edit</span>
+                            <span translate="no" class="material-symbols-rounded text-white !text-3xl">edit</span>
                         </div>
                     </div>
                     <input type="file" id="createPlaylistCoverInput" accept="image/*" class="hidden">
                 </div>
 
                 <div class="flex flex-col gap-3 justify-between flex-grow">
-                    <button id="createPlaylistCoverBtn"
-                        class="w-full h-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
-                        <span class="material-symbols-rounded !text-lg">image</span>
-                        Cover Image
-                    </button>
-
                     <input type="text" id="playlistNameInput" placeholder="My Awesome Playlist..."
                         data-i18n-placeholder="playlist.playlistNamePlaceholder"
                         class="w-full h-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
@@ -666,7 +669,7 @@
         <div class="absolute inset-0 bg-black/80" id="addToPlaylistBackdrop"></div>
         <div class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl max-h-[80vh] flex flex-col">
             <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <span class="material-symbols-rounded text-[var(--primary-color)]">playlist_add</span>
+                <span translate="no" class="material-symbols-rounded text-[var(--primary-color)]">playlist_add</span>
                 <span data-i18n="playlist.addToPlaylist">Add to Playlist</span>
             </h3>
             <div id="addToPlaylistList" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar mb-4">
@@ -682,28 +685,28 @@
         style="display: none;">
         <button id="contextEditPlaylist"
             class="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3">
-            <span class="material-symbols-rounded text-white/60">edit</span>
+            <span translate="no" class="material-symbols-rounded text-white/60">edit</span>
             <span data-i18n="contextMenu.edit">Edit</span>
         </button>
         <button id="contextSharePlaylist"
             class="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3">
-            <span class="material-symbols-rounded text-white/60">share</span>
+            <span translate="no" class="material-symbols-rounded text-white/60">share</span>
             <span data-i18n="playlist.sharePlaylist">Share Playlist</span>
         </button>
         <button id="contextExportPlaylist"
             class="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3">
-            <span class="material-symbols-rounded text-white/60">download</span>
+            <span translate="no" class="material-symbols-rounded text-white/60">download</span>
             <span data-i18n="playlist.export">Export</span>
         </button>
         <button id="contextDownloadOffline"
             class="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3">
-            <span class="material-symbols-rounded text-white/60">android_wifi_3_bar_off</span>
+            <span translate="no" class="material-symbols-rounded text-white/60">android_wifi_3_bar_off</span>
             <span data-i18n="playlist.downloadOffline">Download Offline</span>
         </button>
         <div class="h-px bg-white/10 my-2"></div>
         <button id="contextDeletePlaylist"
             class="w-full px-4 py-3 text-left text-red-400 hover:bg-red-500/10 transition-colors flex items-center gap-3">
-            <span class="material-symbols-rounded text-red-400">delete</span>
+            <span translate="no" class="material-symbols-rounded text-red-400">delete</span>
             <span data-i18n="contextMenu.delete">Delete</span>
         </button>
     </div>
@@ -723,11 +726,11 @@
                             data-i18n="playlist.coverImage" class="w-full h-full object-cover hidden">
                         <div id="editPlaylistCoverPlaceholder"
                             class="absolute inset-0 flex flex-col items-center justify-center text-white/40">
-                            <span class="material-symbols-rounded !text-3xl">image</span>
+                            <span translate="no" class="material-symbols-rounded !text-3xl">image</span>
                         </div>
                         <div
                             class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span class="material-symbols-rounded text-white !text-2xl">edit</span>
+                            <span translate="no" class="material-symbols-rounded text-white !text-2xl">edit</span>
                         </div>
                     </div>
                     <input type="file" id="editPlaylistCoverInput" accept="image/*" class="hidden">
@@ -767,7 +770,7 @@
                             class="w-full h-full object-cover">
                         <div
                             class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="material-symbols-rounded text-white !text-3xl">edit</span>
+                            <span translate="no" class="material-symbols-rounded text-white !text-3xl">edit</span>
                         </div>
                     </div>
                 </div>
@@ -801,11 +804,11 @@
             class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-2xl mx-4 shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <span class="material-symbols-rounded text-[var(--primary-color)]">library_add</span>
+                    <span translate="no" class="material-symbols-rounded text-[var(--primary-color)]">library_add</span>
                     <span data-i18n="upload.addSong">Add Song</span>
                 </h3>
                 <button id="closeUploadModal" class="p-2 hover:bg-white/10 rounded-full transition-all">
-                    <span class="material-symbols-rounded text-white">close</span>
+                    <span translate="no" class="material-symbols-rounded text-white">close</span>
                 </button>
             </div>
 
@@ -825,7 +828,7 @@
             <div id="fileUploadSection">
                 <div class="border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-[var(--primary-color)] transition-all cursor-pointer"
                     id="dropZone">
-                    <span class="material-symbols-rounded text-5xl text-white/40 mb-3">folder_open</span>
+                    <span translate="no" class="material-symbols-rounded text-5xl text-white/40 mb-3">folder_open</span>
                     <p class="text-white/70 mb-2" data-i18n="upload.dragFiles">Drag files here or click</p>
                     <p class="text-white/40 text-sm" data-i18n="upload.supportedFormats">MP3, M4A, WAV, OGG supported
                     </p>
@@ -849,7 +852,8 @@
                                     class="w-full h-full object-cover">
                                 <div
                                     class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <span class="material-symbols-rounded text-white text-2xl">photo_camera</span>
+                                    <span translate="no"
+                                        class="material-symbols-rounded text-white text-2xl">photo_camera</span>
                                 </div>
                             </div>
                         </div>
@@ -876,7 +880,8 @@
             <div id="uploadPreview" class="hidden mt-4">
                 <div class="flex items-center justify-between mb-3">
                     <h4 class="text-white font-medium flex items-center gap-2">
-                        <span class="material-symbols-rounded text-[var(--primary-color)]">playlist_add</span>
+                        <span translate="no"
+                            class="material-symbols-rounded text-[var(--primary-color)]">playlist_add</span>
                         <span data-i18n="upload.songsToUpload">Songs to Upload</span>
                         <span id="pendingCount" class="text-sm text-white/60">(0)</span>
                     </h4>
@@ -903,11 +908,11 @@
             class="relative bg-[#0D0204] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] overflow-y-auto border border-white/10">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                    <span class="material-symbols-rounded text-[var(--primary-color)]">settings</span>
+                    <span translate="no" class="material-symbols-rounded text-[var(--primary-color)]">settings</span>
                     <span data-i18n="settings.title">Settings</span>
                 </h3>
                 <button id="closeSettingsBtn" class="p-2 hover:bg-white/10 rounded-full transition-all">
-                    <span class="material-symbols-rounded text-white">close</span>
+                    <span translate="no" class="material-symbols-rounded text-white">close</span>
                 </button>
             </div>
 
@@ -921,14 +926,15 @@
                             class="w-full h-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
                         <button id="saveUsernameBtn"
                             class="px-4 py-2 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all">
-                            <span class="material-symbols-rounded">save</span>
+                            <span translate="no" class="material-symbols-rounded">save</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="bg-white/5 rounded-xl p-4">
                     <div class="flex items-center gap-2 mb-3">
-                        <span class="material-symbols-rounded text-[var(--primary-color)]">language</span>
+                        <span translate="no"
+                            class="material-symbols-rounded text-[var(--primary-color)]">language</span>
                         <span class="text-white font-medium" data-i18n="settings.language">Language</span>
                     </div>
 
@@ -936,14 +942,15 @@
                         <button id="languageSelectBtn"
                             class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white flex items-center justify-between hover:bg-white/15 transition-colors">
                             <span id="currentLanguageLabel">Auto (System)</span>
-                            <span class="material-symbols-rounded text-white/60">expand_more</span>
+                            <span translate="no" class="material-symbols-rounded text-white/60">expand_more</span>
                         </button>
                         <div id="languageDropdown"
                             class="absolute top-full left-0 right-0 mt-2 bg-[#1a0a0f] border border-white/20 rounded-xl overflow-hidden opacity-0 pointer-events-none transition-all duration-200 z-50 shadow-2xl">
                             <button
                                 class="language-option w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3"
                                 data-value="auto">
-                                <span class="material-symbols-rounded text-[var(--primary-color)]">auto_awesome</span>
+                                <span translate="no"
+                                    class="material-symbols-rounded text-[var(--primary-color)]">auto_awesome</span>
                                 <span data-i18n="settings.languageAuto">Auto (System)</span>
                             </button>
                             <button
@@ -967,7 +974,8 @@
                 <div class="bg-white/5 rounded-xl p-4">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-rounded text-[var(--primary-color)]">transition_chop</span>
+                            <span translate="no"
+                                class="material-symbols-rounded text-[var(--primary-color)]">transition_chop</span>
                             <span class="text-white font-medium" data-i18n="settings.gaplessPlayback">Gapless
                                 Playback</span>
                         </div>
@@ -995,7 +1003,8 @@
 
                 <div class="bg-white/5 rounded-xl p-4">
                     <div class="flex items-center gap-2 mb-3">
-                        <span class="material-symbols-rounded text-[var(--primary-color)]">queue_music</span>
+                        <span translate="no"
+                            class="material-symbols-rounded text-[var(--primary-color)]">queue_music</span>
                         <span class="text-white font-medium" data-i18n="settings.exploreLimit">Explore Song Limit</span>
                     </div>
                     <div class="flex items-center justify-between mb-2">
@@ -1010,7 +1019,7 @@
 
                 <div class="bg-white/5 rounded-xl p-4">
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="material-symbols-rounded text-[var(--primary-color)]">sync</span>
+                        <span translate="no" class="material-symbols-rounded text-[var(--primary-color)]">sync</span>
                         <span class="text-white font-medium" data-i18n="settings.dataTransfer">Data Transfer</span>
                     </div>
                     <p class="text-white/50 text-xs mb-4" data-i18n="settings.dataTransferDescription">
@@ -1018,7 +1027,7 @@
                     <div class="flex gap-2">
                         <button id="importLibraryBtn"
                             class="flex-1 py-3 px-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all flex items-center justify-center gap-1 min-w-0 overflow-hidden">
-                            <span class="material-symbols-rounded !text-lg shrink-0">upload</span>
+                            <span translate="no" class="material-symbols-rounded !text-lg shrink-0">upload</span>
                             <span data-i18n="playlist.import" class="whitespace-nowrap"
                                 style="font-size: clamp(10px, 3vw, 16px);">
                                 Import
@@ -1026,7 +1035,7 @@
                         </button>
                         <button id="exportLibraryBtn"
                             class="flex-1 py-3 px-2 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all flex items-center justify-center gap-1 min-w-0 overflow-hidden">
-                            <span class="material-symbols-rounded !text-lg shrink-0">download</span>
+                            <span translate="no" class="material-symbols-rounded !text-lg shrink-0">download</span>
                             <span data-i18n="playlist.export" class="whitespace-nowrap"
                                 style="font-size: clamp(10px, 3vw, 16px);">
                                 Export
@@ -1087,32 +1096,32 @@
                             <div class="flex items-center">
                                 <div class="nav-links mr-2">
                                     <a href="#" id="fixedRadioBtn" class="flex items-center text-white">
-                                        <span class="material-symbols-rounded text-2xl" translate="no">radio</span>
+                                        <span translate="no" class="material-symbols-rounded text-2xl" translate="no">radio</span>
                                     </a>
                                     <a class="donate-btn flex items-center text-white" id="donateBtn" href="https://buymeacoffee.com/xmer" target="_blank">
-                                        <span class="material-symbols-rounded text-2xl" translate="no">volunteer_activism</span>
+                                        <span translate="no" class="material-symbols-rounded text-2xl" translate="no">volunteer_activism</span>
                                     </a>
                                     <a href="about/" target="_blank" class="flex items-center text-white mr-2">
-                                        <span class="material-symbols-rounded text-2xl" translate="no">help</span>
+                                        <span translate="no" class="material-symbols-rounded text-2xl" translate="no">help</span>
                                     </a>
                                 </div>
                                 <button id="fixedMenuControlBtn" aria-label="Open Menu" aria-expanded="false"
                                     aria-controls="menuOverlay">
-                                    <span class="material-symbols-rounded text-white" translate="no">menu</span>
+                                    <span translate="no" class="material-symbols-rounded text-white" translate="no">menu</span>
                                 </button>
                                 <button id="fixedPlaylistMenuBtn" aria-label="Playlists" data-i18n-aria="nav.playlists"
                                     aria-expanded="false"
                                     class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all">
-                                    <span class="material-symbols-rounded text-white" translate="no">queue_music</span>
+                                    <span translate="no" class="material-symbols-rounded text-white" translate="no">queue_music</span>
                                 </button>
                                 <button id="fixedSettingsBtnMain" aria-label="Settings"
                                 class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all ml-2">
-                                <span class="material-symbols-rounded text-white" translate="no">settings</span>
+                                <span translate="no" class="material-symbols-rounded text-white" translate="no">settings</span>
                             </button>
                             </div>
                         </nav>
                         <div class="navbar-toggle-handle" id="navbarToggleHandle" title="Toggle Navbar">
-                            <span class="material-symbols-rounded" translate="no">expand_less</span>
+                            <span translate="no" class="material-symbols-rounded" translate="no">expand_less</span>
                         </div>
                     </div>
                 `;
@@ -1270,7 +1279,7 @@
         <div
             class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl max-h-[80vh] flex flex-col transform scale-95 transition-transform duration-300">
             <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <span class="material-symbols-rounded text-[var(--primary-color)]">radio</span>
+                <span translate="no" class="material-symbols-rounded text-[var(--primary-color)]">radio</span>
                 <span data-i18n="nav.radio">Radio</span>
             </h3>
             <div id="radioStationList" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar mb-4">
@@ -1289,7 +1298,7 @@
             class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-4">
                 <div class="w-12 h-12 rounded-full bg-[var(--primary-color)]/20 flex items-center justify-center">
-                    <span class="material-symbols-rounded text-[var(--primary-color)]">help</span>
+                    <span translate="no" class="material-symbols-rounded text-[var(--primary-color)]">help</span>
                 </div>
                 <div>
                     <h3 id="confirmModalTitle" class="text-xl font-bold text-white" data-i18n="common.confirm">Confirm

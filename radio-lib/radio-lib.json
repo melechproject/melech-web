@@ -2,17 +2,12 @@
   {
     "name": "JoyFM",
     "group": "JoyTürk",
-    "streamUrl": "http://46.20.3.204:8010/joyfm"
+    "streamUrl": "https://25703.live.streamtheworld.com/JOY_FM128AAC.aac"
   },
   {
     "name": "JoyTürk",
     "group": "JoyTürk",
     "streamUrl": "https://27753.live.streamtheworld.com/JOY_TURK.mp3"
-  },
-  {
-    "name": "KaradenizFM",
-    "group": "Karma",
-    "streamUrl": "https://moondigitaledge.radyotvonline.net/karadenizfm/playlist.m3u8"
   },
   {
     "name": "FenomenFM",
@@ -50,11 +45,6 @@
     "streamUrl": "https://stream.netradyom.com/radio/8000/radio.mp3?/;stream.mp3"
   },
   {
-    "name": "Polis Radyosu",
-    "group": "Karma",
-    "streamUrl": "https://m.egm.gov.tr:8093/stream?/;stream.mp3"
-  },
-  {
     "name": "BestFM",
     "group": "Karma",
     "streamUrl": "https://officialbestfm.radyotvonline.net/bestfmofficial?/;stream.mp3"
@@ -90,11 +80,6 @@
     "streamUrl": "https://officialbabaradyo.radyotvonline.net/babaofficial?/;stream.mp3"
   },
   {
-    "name": "KEXP",
-    "group": "Karma",
-    "streamUrl": "http://live-mp3-128.kexp.org/kexp128.mp3"
-  },
-  {
     "name": "NPR",
     "group": "Karma",
     "streamUrl": "https://npr-ice.streamguys1.com/live.mp3"
@@ -102,7 +87,7 @@
   {
     "name": "Radio Paradise",
     "group": "Karma",
-    "streamUrl": "http://stream.radioparadise.com/mp3-192"
+    "streamUrl": "https://stream.radioparadise.com/mp3-192"
   },
   {
     "name": "Classic FM",

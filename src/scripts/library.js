@@ -63,16 +63,16 @@ class MusicLibrary {
     this.contextMenu.className = "context-menu";
     this.contextMenu.innerHTML = `
             <div class="context-menu-item" data-action="edit">
-                <span class="material-symbols-rounded">edit</span>
+                <span translate="no" class="material-symbols-rounded">edit</span>
                 <span data-i18n="song.editSong">Edit Song</span>
             </div>
             <div class="context-menu-item delete" data-action="delete">
-                <span class="material-symbols-rounded">delete</span>
+                <span translate="no" class="material-symbols-rounded">delete</span>
                 <span data-i18n="song.deleteSong">Delete Song</span>
             </div>
             <div class="context-menu-divider"></div>
             <div class="context-menu-item" data-action="download">
-                <span class="material-symbols-rounded">download</span>
+                <span translate="no" class="material-symbols-rounded">download</span>
                 <span data-i18n="contextMenu.download">Download</span>
             </div>
         `;
@@ -557,10 +557,10 @@ class MusicLibrary {
             <div class="song-card bg-white/5 p-3 md:p-4 rounded-2xl fade-in" data-id="${track.id}" data-audio="${audioUrl}">
                 <div class="relative aspect-square mb-3 overflow-hidden rounded-xl bg-white/10">
                     <button class="add-to-playlist-btn" data-id="${track.id}" title="${addToPlaylistTitle}">
-                        <span class="material-symbols-rounded !text-lg">playlist_add</span>
+                        <span translate="no" class="material-symbols-rounded !text-lg">playlist_add</span>
                     </button>
                     <button class="favorite-track-btn" data-id="${track.id}" title="${addToFavoritesTitle}">
-                        <span class="material-symbols-rounded !text-lg ${favIconClass}" style="font-variation-settings: ${favFill}">favorite</span>
+                        <span translate="no" class="material-symbols-rounded !text-lg ${favIconClass}" style="font-variation-settings: ${favFill}">favorite</span>
                     </button>
                     <img src="${track.image}" alt="${track.title}" class="w-full h-full object-cover" loading="lazy" decoding="async">
                     <div class="track-loading-overlay hidden" id="loading-${track.id}">
@@ -568,7 +568,7 @@ class MusicLibrary {
                     </div>
                     <div class="play-button absolute inset-0 flex items-center justify-center bg-black/50">
                         <button class="play-track-btn w-12 h-12 bg-primary-color rounded-full flex items-center justify-center text-white shadow-lg" style="background-color: var(--primary-color);">
-                            <span class="material-symbols-rounded !text-3xl">play_arrow</span>
+                            <span translate="no" class="material-symbols-rounded !text-3xl">play_arrow</span>
                         </button>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-const CACHE_NAME = "melech-v3";
+const CACHE_NAME = "melech-v5";
 const ASSETS = [
   "./",
   "./index.html",

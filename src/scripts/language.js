@@ -178,7 +178,9 @@ class I18n {
     this.listeners.forEach((callback) => {
       try {
         callback(this.currentLang);
-      } catch (error) { console.error(error); }
+      } catch (error) {
+        console.error(error);
+      }
     });
   }
 

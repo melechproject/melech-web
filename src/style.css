@@ -6,6 +6,8 @@
 
 html {
   scrollbar-width: none !important;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 * {

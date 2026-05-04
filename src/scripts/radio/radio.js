@@ -54,7 +54,7 @@
       button.className =
         "w-full px-4 py-3 text-left text-white hover:bg-white/10 rounded-xl transition-colors flex items-center gap-3 group";
       button.innerHTML = `
-                <span class="material-symbols-rounded text-white/40 group-hover:text-[var(--primary-color)] transition-colors">radio</span>
+                <span translate="no" class="material-symbols-rounded text-white/40 group-hover:text-[var(--primary-color)] transition-colors">radio</span>
                 <div class="flex-1 min-w-0 text-left">
                     <div class="font-medium truncate text-sm md:text-base">${station.name}</div>
                     <div class="text-[10px] md:text-xs text-white/40 truncate">${station.group || "Radio"}</div>

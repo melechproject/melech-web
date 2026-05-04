@@ -214,7 +214,9 @@
     if (!("mediaSession" in navigator)) return;
     try {
       navigator.mediaSession.setPositionState(null);
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   window.addEventListener("playTrack", () => {

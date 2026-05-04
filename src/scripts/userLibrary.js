@@ -273,20 +273,20 @@ class UserLibrary {
     this.contextMenu.className = "context-menu";
     this.contextMenu.innerHTML = `
             <div class="context-menu-item" data-action="edit">
-                <span class="material-symbols-rounded">edit</span>
+                <span translate="no" class="material-symbols-rounded">edit</span>
                 <span data-i18n="song.editSong">Edit Song</span>
             </div>
             <div class="context-menu-item" data-action="share">
-                <span class="material-symbols-rounded">share</span>
+                <span translate="no" class="material-symbols-rounded">share</span>
                 <span data-i18n="song.shareSong">Share Song</span>
             </div>
             <div class="context-menu-item delete" data-action="delete">
-                <span class="material-symbols-rounded">delete</span>
+                <span translate="no" class="material-symbols-rounded">delete</span>
                 <span data-i18n="song.deleteSong">Delete Song</span>
             </div>
             <div class="context-menu-divider"></div>
             <div class="context-menu-item" data-action="download">
-                <span class="material-symbols-rounded">download</span>
+                <span translate="no" class="material-symbols-rounded">download</span>
                 <span data-i18n="contextMenu.download">Download</span>
             </div>
         `;
@@ -723,7 +723,8 @@ class UserLibrary {
     if (!btn) return;
 
     if (mode === "refresh") {
-      btn.innerHTML = '<span class="material-symbols-rounded">refresh</span>';
+      btn.innerHTML =
+        '<span translate="no" class="material-symbols-rounded">refresh</span>';
       btn.title = window.t ? window.t("playlist.refresh") : "Refresh";
       btn.onclick = () => {
         if (window.melechLibrary) {
@@ -731,7 +732,8 @@ class UserLibrary {
         }
       };
     } else {
-      btn.innerHTML = '<span class="material-symbols-rounded">add</span>';
+      btn.innerHTML =
+        '<span translate="no" class="material-symbols-rounded">add</span>';
       btn.title = window.t ? window.t("song.addSong") : "Add Song";
       btn.onclick = () => this.openUploadModal();
     }
@@ -948,10 +950,10 @@ class UserLibrary {
                         ${
                           song.image
                             ? `<img src="${song.image}" class="w-full h-full object-cover">`
-                            : `<span class="material-symbols-rounded text-white/40 w-full h-full flex items-center justify-center bg-white/10">music_note</span>`
+                            : `<span translate="no" class="material-symbols-rounded text-white/40 w-full h-full flex items-center justify-center bg-white/10">music_note</span>`
                         }
                         <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                            <span class="material-symbols-rounded text-white text-2xl">photo_camera</span>
+                            <span translate="no" class="material-symbols-rounded text-white text-2xl">photo_camera</span>
                         </div>
                     </div>
                 </div>
@@ -967,7 +969,7 @@ class UserLibrary {
                 </div>
                 <button onclick="userLibrary.removePendingSong(${index})"
                     class="h-full px-3 hover:bg-white/10 rounded-xl transition-all flex items-center justify-center">
-                    <span class="material-symbols-rounded text-white/60 text-xl">close</span>
+                    <span translate="no" class="material-symbols-rounded text-white/60 text-xl">close</span>
                 </button>
             </div>
         `;
@@ -1664,19 +1666,19 @@ class UserLibrary {
                       track.source !== "radio"
                         ? `
                     <button class="add-to-playlist-btn" data-id="${track.id}" title="Add to playlist">
-                        <span class="material-symbols-rounded !text-lg">playlist_add</span>
+                        <span translate="no" class="material-symbols-rounded !text-lg">playlist_add</span>
                     </button>
                     `
                         : ""
                     }
                     <button class="favorite-track-btn" data-id="${track.id}" title="Add to favorites">
-                        <span class="material-symbols-rounded !text-lg ${favIconClass}" style="font-variation-settings: ${favFill}">favorite</span>
+                        <span translate="no" class="material-symbols-rounded !text-lg ${favIconClass}" style="font-variation-settings: ${favFill}">favorite</span>
                     </button>
                     ${
                       track.image
                         ? `<img src="${track.image}" alt="${track.title}" class="w-full h-full object-cover" loading="lazy" decoding="async">`
                         : `<div class="w-full h-full flex items-center justify-center bg-white/5">
-                        <span class="material-symbols-rounded !text-5xl text-white/20">music_note</span>
+                        <span translate="no" class="material-symbols-rounded !text-5xl text-white/20">music_note</span>
                     </div>`
                     }
                     <div class="track-loading-overlay hidden" id="loading-${track.id}">
@@ -1684,7 +1686,7 @@ class UserLibrary {
                     </div>
                     <div class="play-button absolute inset-0 flex items-center justify-center bg-black/50">
                         <button class="play-track-btn w-12 h-12 bg-primary-color rounded-full flex items-center justify-center text-white shadow-lg" style="background-color: var(--primary-color);">
-                            <span class="material-symbols-rounded !text-3xl">play_arrow</span>
+                            <span translate="no" class="material-symbols-rounded !text-3xl">play_arrow</span>
                         </button>
                     </div>
                 </div>

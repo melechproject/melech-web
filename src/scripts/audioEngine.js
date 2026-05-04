@@ -12,6 +12,7 @@ class OptiAudioEngine {
     this.channels = {
       A: this._createChannel("A"),
       B: this._createChannel("B"),
+      L: this._createChannel("L"),
     };
     this.activeChannel = "A";
     this.isPreloadingNext = false;
@@ -23,6 +24,7 @@ class OptiAudioEngine {
     this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     this._setupChannelRouting(this.channels.A);
     this._setupChannelRouting(this.channels.B);
+    this._setupChannelRouting(this.channels.L);
 
     if ("mediaSession" in navigator) {
       navigator.mediaSession.playbackState = "playing";
@@ -32,7 +34,7 @@ class OptiAudioEngine {
   _createChannel(id) {
     const audioEl = new Audio();
     audioEl.crossOrigin = "anonymous";
-    audioEl.preload = "auto";
+    audioEl.preload = id === "L" ? "none" : "auto";
 
     audioEl.ontimeupdate = () => this._handleTimeUpdate(id);
     audioEl.onended = () => this._handleTrackEnd(id);
@@ -54,16 +56,86 @@ class OptiAudioEngine {
     channel.gainNode.connect(this.ctx.destination);
   }
 
+  async playLive(url) {
+    if (!this.ctx) this.init();
+    if (this.ctx.state === "suspended") await this.ctx.resume();
+
+    if (this.activeChannel !== "L") this.stop();
+
+    this.activeChannel = "L";
+    const channel = this.channels.L;
+
+    this._cleanupMemory(channel);
+    channel.currentUrl = url;
+
+    this._activateKeepAlive();
+    if (this.onStateChange)
+      this.onStateChange({ type: "loading", status: true, url, isLive: true });
+
+    channel.element.src = url;
+    channel.gainNode.gain.setValueAtTime(1, this.ctx.currentTime);
+
+    return new Promise((resolve) => {
+      const onCanPlay = async () => {
+        channel.element.removeEventListener("canplay", onCanPlay);
+        channel.element.removeEventListener("error", onError);
+        this._deactivateKeepAlive();
+        if (this.onStateChange)
+          this.onStateChange({
+            type: "loading",
+            status: false,
+            url,
+            isLive: true,
+          });
+
+        try {
+          await channel.element.play();
+          resolve(true);
+        } catch (e) {
+          resolve(false);
+        }
+      };
+
+      const onError = () => {
+        channel.element.removeEventListener("canplay", onCanPlay);
+        channel.element.removeEventListener("error", onError);
+        this._deactivateKeepAlive();
+        if (this.onStateChange) {
+          this.onStateChange({
+            type: "loading",
+            status: false,
+            url,
+            isLive: true,
+          });
+          this.onStateChange({
+            type: "error",
+            channelId: "L",
+            isLiveError: true,
+            error: channel.element.error,
+          });
+        }
+        resolve(false);
+      };
+
+      channel.element.addEventListener("canplay", onCanPlay);
+      channel.element.addEventListener("error", onError);
+      channel.element.load();
+    });
+  }
+
   async play(url) {
     if (!this.ctx) this.init();
     if (this.ctx.state === "suspended") await this.ctx.resume();
 
+    if (this.activeChannel === "L") {
+      this.stop();
+      this.activeChannel = "A";
+    }
+
     const channel = this.channels[this.activeChannel];
     const loadSuccess = await this._smartLoad(channel, url);
 
-    if (!loadSuccess) {
-      return false;
-    }
+    if (!loadSuccess) return false;
 
     channel.gainNode.gain.setValueAtTime(1, this.ctx.currentTime);
     await channel.element.play();
@@ -75,18 +147,16 @@ class OptiAudioEngine {
     channel.element.pause();
     this._cleanupMemory(channel);
 
-    if ("mediaSession" in navigator) {
+    if ("mediaSession" in navigator)
       navigator.mediaSession.playbackState = "paused";
-    }
   }
 
   pause() {
     const channel = this.channels[this.activeChannel];
     channel.element.pause();
 
-    if ("mediaSession" in navigator) {
+    if ("mediaSession" in navigator)
       navigator.mediaSession.playbackState = "paused";
-    }
   }
 
   setNextTrack(url) {
@@ -104,17 +174,14 @@ class OptiAudioEngine {
 
   setCrossfadeDuration(seconds) {
     const parsedSeconds = parseFloat(seconds);
-
-    if (parsedSeconds >= 2 && parsedSeconds <= 12) {
+    if (parsedSeconds >= 2 && parsedSeconds <= 12)
       this.crossfadeDuration = parsedSeconds;
-    }
   }
 
   setPreloadLeadTime(seconds) {
     const parsedSeconds = parseFloat(seconds);
-    if (parsedSeconds >= 5 && parsedSeconds <= 60) {
+    if (parsedSeconds >= 5 && parsedSeconds <= 60)
       this.preloadLeadTime = parsedSeconds;
-    }
   }
 
   setKeepAliveCallbacks({ activate, deactivate } = {}) {
@@ -124,12 +191,12 @@ class OptiAudioEngine {
   }
 
   _handleTimeUpdate(channelId) {
-    if (channelId !== this.activeChannel) return;
+    if (channelId !== this.activeChannel || channelId === "L") return;
 
     const channel = this.channels[this.activeChannel];
     const audio = channel.element;
 
-    if (!audio.duration) return;
+    if (!audio.duration || !isFinite(audio.duration)) return;
 
     const timeLeft = audio.duration - audio.currentTime;
 
@@ -158,7 +225,6 @@ class OptiAudioEngine {
     this._activateKeepAlive();
     const nextChannelId = this.activeChannel === "A" ? "B" : "A";
     const nextChannel = this.channels[nextChannelId];
-
     await this._smartLoad(nextChannel, this.nextTrackUrl);
   }
 
@@ -197,8 +263,14 @@ class OptiAudioEngine {
   }
 
   _handleTrackEnd(channelId) {
-    const channel = this.channels[channelId];
+    if (channelId === "L") {
+      this._cleanupMemory(this.channels.L);
+      if (this.onStateChange)
+        this.onStateChange({ type: "live_ended", channelId });
+      return;
+    }
 
+    const channel = this.channels[channelId];
     if (
       !this.isGapless &&
       channelId === this.activeChannel &&
@@ -207,7 +279,6 @@ class OptiAudioEngine {
       this.play(this.nextTrackUrl);
       this.nextTrackUrl = null;
     }
-
     this._cleanupMemory(channel);
   }
 
@@ -216,18 +287,15 @@ class OptiAudioEngine {
       channel.currentUrl === url &&
       channel.element.src &&
       !channel.element.error
-    ) {
+    )
       return true;
-    }
 
     this._cleanupMemory(channel);
     channel.currentUrl = url;
 
     this._activateKeepAlive();
-
-    if (this.onStateChange) {
+    if (this.onStateChange)
       this.onStateChange({ type: "loading", status: true, url });
-    }
 
     let blobUrl = null;
 
@@ -239,15 +307,12 @@ class OptiAudioEngine {
           typeof window.melechDB.getOfflineTrack === "function"
         ) {
           const offlineData = await window.melechDB.getOfflineTrack(url);
-          if (offlineData && offlineData.blob) {
-            blob = offlineData.blob;
-          }
+          if (offlineData && offlineData.blob) blob = offlineData.blob;
         }
 
         if (!blob) {
           const response = await fetch(url, { cache: "no-store" });
           if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
-
           blob = await response.blob();
           if (blob.size === 0) throw new Error("Empty blob received");
         }
@@ -274,9 +339,8 @@ class OptiAudioEngine {
         channel.element.removeEventListener("canplay", onCanPlay);
         channel.element.removeEventListener("error", onError);
         this._deactivateKeepAlive();
-        if (this.onStateChange) {
+        if (this.onStateChange)
           this.onStateChange({ type: "loading", status: false, url });
-        }
         resolve(true);
       };
 
@@ -334,6 +398,14 @@ class OptiAudioEngine {
         `audioEngine: Channel ${channelId} error code ${error.code}:`,
         error.message,
       );
+      if (channelId === "L" && this.onStateChange) {
+        this.onStateChange({
+          type: "error",
+          channelId,
+          isLiveError: true,
+          error,
+        });
+      }
     }
   }
 
@@ -354,25 +426,19 @@ class OptiAudioEngine {
   }
 
   cleanupAllBlobs() {
-    this.activeBlobs.forEach((blobUrl) => {
-      URL.revokeObjectURL(blobUrl);
-    });
+    this.activeBlobs.forEach((blobUrl) => URL.revokeObjectURL(blobUrl));
     this.activeBlobs.clear();
-
     this._cleanupMemory(this.channels.A);
     this._cleanupMemory(this.channels.B);
+    this._cleanupMemory(this.channels.L);
   }
 
   _activateKeepAlive() {
-    if (this.onKeepAliveActivate) {
-      this.onKeepAliveActivate();
-    }
+    if (this.onKeepAliveActivate) this.onKeepAliveActivate();
   }
 
   _deactivateKeepAlive() {
-    if (this.onKeepAliveDeactivate) {
-      this.onKeepAliveDeactivate();
-    }
+    if (this.onKeepAliveDeactivate) this.onKeepAliveDeactivate();
   }
 }
 

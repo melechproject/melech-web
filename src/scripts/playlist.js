@@ -135,9 +135,6 @@ class PlaylistManager {
     this.createPlaylistCoverInput = document.getElementById(
       "createPlaylistCoverInput",
     );
-    this.createPlaylistCoverBtn = document.getElementById(
-      "createPlaylistCoverBtn",
-    );
     this.createPlaylistCoverPreview = document.getElementById(
       "createPlaylistCoverPreview",
     );
@@ -253,10 +250,6 @@ class PlaylistManager {
       this.createPlaylist(),
     );
 
-    this.createPlaylistCoverBtn?.addEventListener("click", () => {
-      this.createPlaylistCoverInput?.click();
-    });
-
     this.createPlaylistCoverPreview?.addEventListener("click", () => {
       this.createPlaylistCoverInput?.click();
     });
@@ -324,13 +317,14 @@ class PlaylistManager {
     this.contextDownloadBtn = document.getElementById("contextDownloadOffline");
     this.contextDownloadBtn?.addEventListener("click", async () => {
       if (this.contextMenuTargetId) {
+        const targetId = this.contextMenuTargetId;
         const action = this.contextDownloadBtn.dataset.action;
-        if (action === "remove") {
-          await this.removeOfflinePlaylist(this.contextMenuTargetId);
-        } else {
-          await this.downloadOfflinePlaylist(this.contextMenuTargetId);
-        }
         this.hideContextMenu();
+        if (action === "remove") {
+          await this.removeOfflinePlaylist(targetId);
+        } else {
+          await this.downloadOfflinePlaylist(targetId);
+        }
       }
     });
 
@@ -782,7 +776,9 @@ class PlaylistManager {
               await window.melechDB.saveOfflineTrack(url, blob);
             }
           }
-        } catch (e) { console.error(e); }
+        } catch (e) {
+          console.error(e);
+        }
       }
       downloadedCount++;
       if (window.exportImportManager) {
@@ -1211,7 +1207,7 @@ class PlaylistManager {
     if (!this.playlists || this.playlists.length === 0) {
       this.playlistList.innerHTML = `
                 <div class="empty-playlists">
-                    <span class="material-symbols-rounded">queue_music</span>
+                    <span translate="no" class="material-symbols-rounded">queue_music</span>
                     <p data-i18n="playlist.emptyPlaylistText">Hmm... It's empty here!</p>
                 </div>
             `;
@@ -1230,7 +1226,7 @@ class PlaylistManager {
 
         const coverHtml = playlist.coverImage
           ? `<img src="${playlist.coverImage}" alt="${this.escapeHtml(playlist.name)}">`
-          : `<div class="cover-placeholder"><span class="material-symbols-rounded">${playlist.isFavorites ? "favorite" : "music_note"}</span></div>`;
+          : `<div class="cover-placeholder"><span translate="no" class="material-symbols-rounded">${playlist.isFavorites ? "favorite" : "music_note"}</span></div>`;
 
         return `
             <div class="playlist-item ${isActive ? "now-playing" : ""}" data-id="${playlist.id}">
@@ -1245,7 +1241,7 @@ class PlaylistManager {
                 </div>
                 <div class="playlist-item-actions">
                     <button class="playlist-action-btn play ${isActive && isMusicPlaying ? "active" : ""}" data-id="${playlist.id}" title="${playBtnTitle}">
-                        <span class="material-symbols-rounded">${playBtnIcon}</span>
+                        <span translate="no" class="material-symbols-rounded">${playBtnIcon}</span>
                     </button>
                 </div>
             </div>
@@ -1330,7 +1326,7 @@ class PlaylistManager {
         : "No Songs Yet";
       this.playlistDetailTracks.innerHTML = `
                 <div class="empty-playlists">
-                    <span class="material-symbols-rounded">music_off</span>
+                    <span translate="no" class="material-symbols-rounded">music_off</span>
                     <p>${emptyTitle}</p>
                 </div>
             `;
@@ -1368,7 +1364,7 @@ class PlaylistManager {
         return `
             <div class="playlist-track-item ${showItemShuffled ? "shuffled" : ""}" data-index="${originalIndex}" data-display-index="${displayIndex}" draggable="true">
                 <div class="playlist-track-drag-handle">
-                    <span class="material-symbols-rounded">drag_indicator</span>
+                    <span translate="no" class="material-symbols-rounded">drag_indicator</span>
                 </div>
                 <div class="playlist-track-image">
                     <img src="${track.image || "./resources/MelechCover.png"}" alt="${this.escapeHtml(track.title)}" loading="lazy">
@@ -1379,10 +1375,10 @@ class PlaylistManager {
                     <div class="playlist-track-artist">${this.escapeHtml(track.artist)}</div>
                 </div>
                 <button class="playlist-track-remove" data-index="${originalIndex}" title="Remove">
-                    <span class="material-symbols-rounded">close</span>
+                    <span translate="no" class="material-symbols-rounded">close</span>
                 </button>
                 <button class="playlist-track-play" data-index="${originalIndex}" data-display-index="${displayIndex}" title="Play">
-                    <span class="material-symbols-rounded">play_arrow</span>
+                    <span translate="no" class="material-symbols-rounded">play_arrow</span>
                 </button>
             </div>
         `;
@@ -1706,7 +1702,7 @@ class PlaylistManager {
         .map(
           (playlist) => `
                 <div class="add-to-playlist-item" data-id="${playlist.id}">
-                    <span class="material-symbols-rounded">playlist_play</span>
+                    <span translate="no" class="material-symbols-rounded">playlist_play</span>
                     <div class="flex-1">
                         <div class="font-medium text-white">${this.escapeHtml(playlist.name)}</div>
                         <div class="text-xs text-white/50">${playlist.trackIds?.length || playlist.tracks?.length || 0} songs</div>

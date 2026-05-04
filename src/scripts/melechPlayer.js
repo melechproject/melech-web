@@ -53,14 +53,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       : null;
 
+    const isActuallyLive =
+      currentTrack.isLive === true || currentTrack.source === "radio";
+
     const trackRef = {
       id: currentTrack.id,
       title: currentTrack.title,
       artist: currentTrack.artist,
       image: currentTrack.image,
       audio: !currentTrack.audioBlob ? currentTrack.audio : undefined,
-      source: currentTrack.source,
-      isLive: currentTrack.isLive,
+      source: currentTrack.source || "url",
+      isLive: isActuallyLive,
       _ref: true,
     };
 
@@ -216,7 +219,9 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           secondaryAudio.removeAttribute("src");
           secondaryAudio._errorSilenced = false;
-        } catch (e) { console.error(e); }
+        } catch (e) {
+          console.error(e);
+        }
       }
 
       if (
@@ -228,7 +233,9 @@ document.addEventListener("DOMContentLoaded", () => {
           activeObjectUrls = activeObjectUrls.filter(
             (u) => u !== nextTrackPreloaded.audioSource,
           );
-        } catch (e) { console.error(e); }
+        } catch (e) {
+          console.error(e);
+        }
       }
 
       nextTrackPreloaded = null;
@@ -255,7 +262,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (optiAudioEngine && !optiAudioEngine.ctx) {
       try {
         optiAudioEngine.init();
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     const silence =
@@ -277,7 +286,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       window._audioUnlocked = true;
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   let wakeLock = null;
@@ -289,7 +300,9 @@ document.addEventListener("DOMContentLoaded", () => {
         wakeLock.addEventListener("release", () => {
           wakeLock = null;
         });
-      } catch (err) { console.error(err); }
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
 
@@ -297,7 +310,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (wakeLock) {
       try {
         await wakeLock.release();
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error(e);
+      }
       wakeLock = null;
     }
   }
@@ -422,7 +437,9 @@ document.addEventListener("DOMContentLoaded", () => {
             activeObjectUrls = activeObjectUrls.filter(
               (u) => u !== audioSource,
             );
-          } catch (e) { console.error(e); }
+          } catch (e) {
+            console.error(e);
+          }
         }
         nextTrackPreloaded = null;
         isPrefetching = false;
@@ -595,7 +612,9 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           URL.revokeObjectURL(oldSrc);
           activeObjectUrls = activeObjectUrls.filter((url) => url !== oldSrc);
-        } catch (e) { console.error(e); }
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
 
@@ -895,7 +914,9 @@ document.addEventListener("DOMContentLoaded", () => {
     activeObjectUrls.forEach((url) => {
       try {
         URL.revokeObjectURL(url);
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error(e);
+      }
     });
     activeObjectUrls = [];
   }
@@ -906,7 +927,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return optiAudioEngine.channels.A;
     if (optiAudioEngine.channels.B.element === audioEl)
       return optiAudioEngine.channels.B;
+    if (optiAudioEngine.channels.L.element === audioEl)
+      return optiAudioEngine.channels.L;
     return null;
+  }
+
+  function isLiveTrack(track) {
+    if (!track) return false;
+    return track.isLive === true || track.source === "radio";
   }
 
   async function setAudioSourceSafely(audioEl, sourceUrl) {
@@ -940,6 +968,17 @@ document.addEventListener("DOMContentLoaded", () => {
       savePlaybackState().catch(() => {});
     }
 
+    if (isLiveTrack(track) && !isSameTrack) {
+      primaryAudio.pause();
+      primaryAudio.removeAttribute("src");
+      secondaryAudio.pause();
+      secondaryAudio.removeAttribute("src");
+    }
+
+    if (!isLiveTrack(track) && isLiveTrack(currentTrack) && optiAudioEngine) {
+      optiAudioEngine.stop();
+    }
+
     if (isCrossfading || nextTrackPreloaded) {
       secondaryAudio.pause();
       secondaryAudio.volume = 1;
@@ -947,7 +986,9 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         secondaryAudio.removeAttribute("src");
         secondaryAudio._errorSilenced = false;
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error(e);
+      }
 
       if (
         nextTrackPreloaded &&
@@ -959,7 +1000,9 @@ document.addEventListener("DOMContentLoaded", () => {
           activeObjectUrls = activeObjectUrls.filter(
             (u) => u !== nextTrackPreloaded.audioSource,
           );
-        } catch (e) { console.error(e); }
+        } catch (e) {
+          console.error(e);
+        }
       }
 
       isCrossfading = false;
@@ -986,6 +1029,40 @@ document.addEventListener("DOMContentLoaded", () => {
       audioSource === "null" ||
       audioSource === "undefined"
     ) {
+      return;
+    }
+
+    if (isLiveTrack(track) && optiAudioEngine) {
+      const liveSuccess = await optiAudioEngine.playLive(audioSource);
+
+      if (!liveSuccess) {
+        isPlaying = false;
+        updatePlayPauseButton();
+        syncSurvivalKitState();
+
+        if (window.showToast) {
+          window.showToast(
+            window.t?.("player.loadError") ||
+              "Failed to load live stream. Please check your connection.",
+            "error",
+            3000,
+          );
+        }
+        return;
+      }
+
+      isPlaying = true;
+      syncSurvivalKitState();
+      miniPlayerClosed = false;
+      updatePlayPauseButton();
+      updateNowPlayingUI(track);
+
+      if (window.updateMediaSessionMetadata) {
+        window.updateMediaSessionMetadata();
+      }
+
+      updateNavigationButtons();
+      savePlaybackState().catch(() => {});
       return;
     }
 
@@ -1155,6 +1232,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const savedState = await loadPlaybackState();
       if (savedState && savedState.track) {
         let track = savedState.track;
+
         if (savedState.track._ref || !savedState.track.audioBlob) {
           let fullTrack = await window.melechDB?.getUserSongById(
             savedState.track.id,
@@ -1166,38 +1244,25 @@ document.addEventListener("DOMContentLoaded", () => {
             );
           }
 
-          if (fullTrack) {
-            const hasAudioSource = fullTrack.audioBlob || fullTrack.audio;
-            if (!hasAudioSource) {
-              return;
-            }
-            track = {
-              id: fullTrack.id,
-              title: fullTrack.title,
-              artist: fullTrack.artist,
-              image: fullTrack.image,
-              audio: fullTrack.audio,
-              audioBlob: fullTrack.audioBlob,
-              source: fullTrack.source || "library",
-            };
-          } else if (savedState.track.audio) {
-            track = {
-              id: savedState.track.id,
-              title: savedState.track.title,
-              artist: savedState.track.artist,
-              image: savedState.track.image,
-              audio: savedState.track.audio,
-              source: "url",
-            };
-          } else {
-            return;
-          }
+          track = {
+            id: fullTrack ? fullTrack.id : savedState.track.id,
+            title: fullTrack ? fullTrack.title : savedState.track.title,
+            artist: fullTrack ? fullTrack.artist : savedState.track.artist,
+            image: fullTrack ? fullTrack.image : savedState.track.image,
+            audio: fullTrack ? fullTrack.audio : savedState.track.audio,
+            audioBlob: fullTrack ? fullTrack.audioBlob : null,
+            source: fullTrack
+              ? fullTrack.source || "library"
+              : savedState.track.source || "url",
+            isLive:
+              savedState.track.isLive ||
+              savedState.track.source === "radio" ||
+              (fullTrack && fullTrack.source === "radio"),
+          };
         }
 
         const audioSource = track.audioBlob || track.audio;
-        if (!audioSource) {
-          return;
-        }
+        if (!audioSource) return;
 
         if (track.audioBlob instanceof Blob) {
           revokeOldObjectUrls();
@@ -1210,13 +1275,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         currentTrack = track;
         window.currentTrack = track;
-        audio.src = track.audio;
+
+        window._savedPlaybackTime = savedState.currentTime || 0;
 
         updateNowPlayingUI(track);
 
         if (window.updateMediaSessionMetadata) {
           window.updateMediaSessionMetadata();
         }
+
         const restored = await restorePlaylistState(savedState);
         if (!restored && savedState.playlistId) {
           window.addEventListener(
@@ -1228,7 +1295,9 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         }
       }
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error("Playback state load error:", err);
+    }
   })();
 
   (async () => {
@@ -1252,7 +1321,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
           updateNowPlayingUI(currentTrack);
         }
-      } catch (err) { console.error(err); }
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     if (window.melechDB) {
@@ -1272,7 +1343,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
           updateNowPlayingUI(currentTrack);
         }
-      } catch (err) { console.error(err); }
+      } catch (err) {
+        console.error(err);
+      }
     }
   })();
 
@@ -1293,7 +1366,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         updateVolumeIcon(savedVolume);
       }
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+    }
   })();
 
   function updatePlayPauseButton() {
@@ -1350,13 +1425,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 audio: fullTrack.audio,
                 audioBlob: fullTrack.audioBlob,
                 source: fullTrack.source || "library",
+                isLive: fullTrack.source === "radio" || fullTrack.isLive,
               };
             }
           }
           const fromPlaylist = !!saved.playlistId;
           await playTrack(track, saved.currentTime, fromPlaylist);
         }
-      } catch (err) { console.error(err); }
+      } catch (err) {
+        console.error(err);
+      }
       return;
     }
 
@@ -1364,6 +1442,7 @@ document.addEventListener("DOMContentLoaded", () => {
       typeof window.isCrossfading === "function"
         ? window.isCrossfading()
         : isCrossfading;
+
     if (crossfading) {
       const priAudio = window.primaryAudio || primaryAudio;
       const secAudio = window.secondaryAudio || secondaryAudio;
@@ -1372,7 +1451,9 @@ document.addEventListener("DOMContentLoaded", () => {
           await Promise.all([priAudio.play(), secAudio.play()]);
           isPlaying = true;
           updatePlayPauseButton();
-        } catch (err) { console.error(err); }
+        } catch (err) {
+          console.error(err);
+        }
       } else {
         priAudio.pause();
         secAudio.pause();
@@ -1384,6 +1465,39 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (isLiveTrack(currentTrack) && optiAudioEngine) {
+      const liveChannel = optiAudioEngine.channels.L;
+
+      if (
+        !liveChannel.currentUrl ||
+        liveChannel.element.src === "" ||
+        liveChannel.element.src === window.location.href
+      ) {
+        await playTrack(currentTrack, 0, !!window.currentPlaylist);
+        return;
+      }
+
+      if (liveChannel.element.paused) {
+        isPlaying = true;
+        updatePlayPauseButton();
+        try {
+          await liveChannel.element.play();
+        } catch (error) {
+          if (error.name === "NotAllowedError") {
+            isPlaying = false;
+            updatePlayPauseButton();
+            syncSurvivalKitState();
+          }
+        }
+      } else {
+        optiAudioEngine.pause();
+        isPlaying = false;
+        updatePlayPauseButton();
+        syncSurvivalKitState();
+      }
+      return;
+    }
+
     if (!currentAudio || currentAudio.paused) {
       const currentSrc = currentAudio ? currentAudio.src : "";
       const isInvalidBlobUrl =
@@ -1391,10 +1505,15 @@ document.addEventListener("DOMContentLoaded", () => {
         currentSrc.startsWith("blob:") &&
         (!currentTrack || currentTrack.audioBlob instanceof Blob === false);
       const isEmptySrc =
-        !currentSrc || currentSrc === "null" || currentSrc === "undefined";
+        !currentSrc ||
+        currentSrc === "null" ||
+        currentSrc === "undefined" ||
+        currentSrc === window.location.href;
 
       if ((isInvalidBlobUrl || isEmptySrc) && currentTrack) {
-        await playTrack(currentTrack, 0, !!window.currentPlaylist);
+        const resumeTime = window._savedPlaybackTime || 0;
+        await playTrack(currentTrack, resumeTime, !!window.currentPlaylist);
+        window._savedPlaybackTime = 0;
         return;
       }
 
@@ -1523,6 +1642,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (isLiveTrack(currentTrack) && optiAudioEngine) {
+      optiAudioEngine.stop();
+    }
+
     if (isManual && isCrossfading) {
       secondaryAudio.pause();
       secondaryAudio.volume = 1;
@@ -1580,6 +1703,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function playPreviousTrack() {
+    if (isLiveTrack(currentTrack) && optiAudioEngine) {
+      optiAudioEngine.stop();
+    }
+
     if (isCrossfading) {
       secondaryAudio.pause();
       secondaryAudio.volume = 1;
@@ -1973,7 +2100,9 @@ document.addEventListener("DOMContentLoaded", () => {
       a.pause();
       try {
         a.removeAttribute("src");
-      } catch (ex) { console.error(ex); }
+      } catch (ex) {
+        console.error(ex);
+      }
       return;
     }
 
@@ -2001,7 +2130,9 @@ document.addEventListener("DOMContentLoaded", () => {
           activeObjectUrls = activeObjectUrls.filter(
             (url) => url !== currentSrc,
           );
-        } catch (ex) { console.error(ex); }
+        } catch (ex) {
+          console.error(ex);
+        }
 
         const newUrl = URL.createObjectURL(trackToRecover.audioBlob);
         activeObjectUrls.push(newUrl);
