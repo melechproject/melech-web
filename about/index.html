@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="about.melechTitle">Melech™ | About — Free Open-Source Music Player</title>
+    <meta name="description"
+        content="Learn about Melech - a free, open-source music player with no tracking, no subscription, and offline support. Your music stays on your device. Privacy-first audio player.">
+    <meta name="keywords"
+        content="about melech, open source music player, privacy focused music app, offline music player, free music app, no subscription music">
+    <meta name="author" content="Melech">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://melech.xmeroriginals.com/about/">
+
+    <meta property="og:title" content="About Melech | Free Open-Source Music Player">
+    <meta property="og:description"
+        content="Melech is a free, open-source music player with no tracking, no subscription, and offline support. Your music stays on your device.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://melech.xmeroriginals.com/about/">
+    <meta property="og:image" content="https://melech.xmeroriginals.com/resources/MelechCover.png">
+    <meta property="og:site_name" content="Melech">
+    <meta property="og:locale" content="en_US">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About Melech | Free Open-Source Music Player">
+    <meta name="twitter:description"
+        content="Melech is a free, open-source music player with no tracking, no subscription, and offline support.">
+    <meta name="twitter:image" content="https://melech.xmeroriginals.com/resources/MelechCover.png">
+
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#140004">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Melech">
+    <link rel="apple-touch-icon" href="../resources/512x512.png">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="../resources/MelechLogoWhite.svg">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        "name": "About Melech",
+        "headline": "About Melech | Free Open-Source Music Player",
+        "description": "Melech is a free, open-source music player with no tracking, no subscription, and offline support.",
+        "url": "https://melech.xmeroriginals.com/about/",
+        "mainEntity": {
+            "@type": "Organization",
+            "name": "Melech Open Source Project",
+            "url": "https://melech.xmeroriginals.com",
+            "logo": "https://melech.xmeroriginals.com/resources/MelechLogoWhite.svg",
+            "sameAs": [
+                "https://github.com/melechproject/"
+            ]
+        },
+        "image": "https://melech.xmeroriginals.com/resources/MelechCover.png"
+    }
+    </script>
+
+    <script src="../lib/tailwind.js"></script>
+    <style>
+        @font-face {
+            font-family: 'Material Symbols Rounded';
+            src: url('../resources/icons/MaterialSymbolsRounded_Filled-Medium.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .material-symbols-rounded {
+            font-family: 'Material Symbols Rounded';
+            font-weight: normal;
+            font-size: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            vertical-align: middle;
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            src: url('../resources/fonts/Poppins-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #140004;
+            color: #ffffff;
+            line-height: 1.7;
+        }
+
+        html {
+            scrollbar-width: none !important;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        * {
+            -ms-overflow-style: none !important;
+            scrollbar-width: none !important;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #ff6b6b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #800020 0%, #600018 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .story-carousel {
+            position: relative;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+            transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .story-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            gap: 24px;
+            padding: 20px 0;
+        }
+
+        .story-card {
+            flex: 0 0 100%;
+            max-width: 100%;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            padding: 4px;
+        }
+
+        .story-card.active {
+            opacity: 1;
+            transform: translateX(0);
+            position: relative;
+            pointer-events: auto;
+            z-index: 2;
+        }
+
+        .story-card.slide-out-left {
+            opacity: 0;
+            transform: translateX(-100%);
+            z-index: 1;
+        }
+
+        .story-card.slide-out-right {
+            opacity: 0;
+            transform: translateX(100%);
+            z-index: 1;
+        }
+
+        .story-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .story-nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(128, 0, 32, 0.3);
+            border: 1px solid rgba(128, 0, 32, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .story-nav-btn:hover {
+            background: rgba(128, 0, 32, 0.5);
+        }
+
+        .story-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .story-dot-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .story-dot-indicator.active {
+            background: #800020;
+            transform: scale(1.2);
+        }
+
+        .story-card .glass-card {
+            height: auto;
+            min-height: fit-content;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .hero-video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .hero-video-container video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+
+        .hero-video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(20, 0, 4, 0.3) 0%, rgba(20, 0, 4, 0.45) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(128, 0, 32, 0.15) 0%, rgba(128, 0, 32, 0.05) 100%);
+            border-left: 3px solid #800020;
+        }
+
+        @media (max-width: 400px) {
+            .xs-grid-1 {
+                grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .glass-card {
+                border-radius: 20px;
+            }
+
+            .feature-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+            }
+
+            .feature-icon .material-symbols-rounded {
+                font-size: 24px !important;
+            }
+
+            @keyframes float {
+
+                0%,
+                100% {
+                    transform: translateY(0px);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+            }
+
+            .glass-card {
+                opacity: 0;
+                transform: translateY(20px);
+                animation: fadeUp 0.5s ease forwards;
+            }
+
+            .grid>.glass-card:nth-child(1) {
+                animation-delay: 0.05s;
+            }
+
+            .grid>.glass-card:nth-child(2) {
+                animation-delay: 0.1s;
+            }
+
+            .grid>.glass-card:nth-child(3) {
+                animation-delay: 0.15s;
+            }
+
+            .grid>.glass-card:nth-child(4) {
+                animation-delay: 0.2s;
+            }
+
+            .grid>.glass-card:nth-child(5) {
+                animation-delay: 0.25s;
+            }
+
+            .grid>.glass-card:nth-child(6) {
+                animation-delay: 0.3s;
+            }
+
+            @keyframes fadeUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .nav-link {
+                padding: 8px 12px;
+                border-radius: 12px;
+            }
+
+            .nav-link:active {
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            h1 {
+                letter-spacing: -0.02em;
+            }
+
+            h2 {
+                letter-spacing: -0.01em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .feature-icon {
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        .glass-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+        }
+
+        @media (max-width: 768px) {
+            .glass-card::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen" style="padding-top: env(safe-area-inset-top);">
+
+    <nav class="bg-[#140004]/80 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-12 py-3 sm:py-4 flex items-center justify-between">
+            <a href="../" class="flex items-center gap-3">
+                <img src="../resources/MelechLogoWhite.svg" class="w-8 h-8" alt="Melech">
+            </a>
+            <div class="flex items-center gap-6">
+                <a href="../" class="nav-link flex items-center gap-2 text-sm">
+                    <span class="material-symbols-rounded text-xl">home</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+
+    <section
+        class="relative px-4 sm:px-6 overflow-hidden min-h-[60vh] sm:min-h-[70vh] flex items-center justify-center">
+        <div class="hero-video-container">
+            <video autoplay muted loop playsinline poster="../resources/MelechBackgroundTemp.jpg" class="lazy">
+                <source src="../resources/MelechBackground.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="hero-video-overlay"></div>
+        <div class="hero-content max-w-4xl mx-auto text-center">
+            <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold mb-0 sm:mb-4 leading-tight"
+                data-i18n="about.heroTitle" data-i18n-attr="innerHTML">
+                Music is <span class="gradient-text">freedom.</span>
+            </h1>
+        </div>
+    </section>
+
+    <section class="py-8 sm:py-12 px-4 sm:px-6 bg-white/[0.02]">
+        <div class="max-w-4xl mx-auto">
+            <div class="glass-card p-6 sm:p-8 border-[#800020]/20">
+                <div class="flex items-start gap-2">
+                    <div class="w-12 h-12 flex items-center justify-center flex-shrink-0">
+                        <img src="../resources/JH-PartnerLogo.png" class="rounded-xl" alt="JukeHost">
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold" data-i18n="about.jukehostTitle">Powered by JukeHost</h3>
+                        <p class="text-white/70 text-sm leading-relaxed" data-i18n="about.jukehostDesc"
+                            data-i18n-attr="innerHTML">
+                            Supported by XmerOriginals. Upload and manage your songs on JukeHost servers,
+                            then transfer them to Melech whenever you want. An easy integration for your personal music
+                            archive.
+                            JukeHost operates independently with its own terms of service.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 sm:py-16 px-4 sm:px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-8 sm:mb-12 text-center"
+                data-i18n="about.storyTitle">Our Story</h2>
+
+            <div class="story-carousel" id="storyCarousel">
+                <div class="story-card active" data-index="0">
+                    <div class="glass-card p-6 md:p-8">
+                        <h3 class="text-xl font-bold" data-i18n="about.storyAlgoTitle">Algorithm Fatigue</h3>
+                        <p class="text-white/70" data-i18n="about.storyAlgoDesc">
+                            It all began when our music listening habits slowly slipped out of our control. Every time
+                            we opened the app, algorithmic impositions, copy-paste playlists, and constantly
+                            interrupting ads built an invisible wall between us and our music. Every time we hit the
+                            like button, we realized we were simply feeding an algorithm.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="story-card" data-index="1">
+                    <div class="glass-card p-6 md:p-8">
+                        <h3 class="text-xl font-bold" data-i18n="about.storyPrivacyTitle">Data Cost and Complex Plans
+                        </h3>
+                        <p class="text-white/70" data-i18n="about.storyPrivacyDesc">
+                            But the issue wasn't just ads or repetitive songs; there was also an unseen data dimension.
+                            The instant processing of every artist we listened to, our current mood, or our location
+                            transformed music from a personal experience into a commercial targeting tool. In an
+                            ecosystem where every move was tracked through cookies, trackers, and behavioral analysis,
+                            simply listening to music required a heavy data cost. When complex subscription plans and
+                            uncontrollable hidden fees were added to this, we decided to step outside the existing
+                            system.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="story-card" data-index="2">
+                    <div class="glass-card p-6 md:p-8">
+                        <h3 class="text-xl font-bold" data-i18n="about.storySubTitle">The Search Begins</h3>
+                        <p class="text-white/70" data-i18n="about.storySubDesc">
+                            We were looking for a free platform that didn't require account management or track user
+                            activity. After searching for a long time without success, we decided to take the first step
+                            ourselves.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="story-card" data-index="3">
+                    <div class="glass-card p-6 md:p-8 border-[#800020]/30">
+                        <h3 class="text-xl font-bold text-white" data-i18n="about.storyBirthTitle">From Lunetune to
+                            Melech
+                        </h3>
+                        <p class="text-white/70" data-i18n="about.storyBirthDesc">
+                            This quest led us to Lunetune, our first step. Our goal was simple: To offer a completely
+                            free music experience without accounts or tracking. But as we developed the project, we
+                            realized we needed more than just a simple player. We envisioned a more secure
+                            infrastructure, a more performant architecture, and a truly user-centric structure. This
+                            dream ultimately gave birth to Melech. Melech was built on an architecture where control is
+                            entirely in the user's hands. With this new structure, we created a peaceful and secure
+                            music space that rivals other music apps, free from algorithmic impositions, where only the
+                            songs you choose play. Now you can be the owner of your own music, not data for big
+                            corporations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-nav">
+                <button class="story-nav-btn" id="storyPrev" aria-label="Previous story">
+                    <span class="material-symbols-rounded">chevron_left</span>
+                </button>
+                <div class="story-dots" id="storyDots">
+                    <span class="story-dot-indicator active" data-index="0"></span>
+                    <span class="story-dot-indicator" data-index="1"></span>
+                    <span class="story-dot-indicator" data-index="2"></span>
+                    <span class="story-dot-indicator" data-index="3"></span>
+                </div>
+                <button class="story-nav-btn" id="storyNext" aria-label="Next story">
+                    <span class="material-symbols-rounded">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="py-12 sm:py-16 px-4 sm:px-6 bg-white/[0.02]">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-8 sm:mb-12 text-center"
+                data-i18n="about.featuresTitle">What Makes Us Different</h2>
+
+            <div class="grid grid-cols-2 xs-grid-1 md:grid-cols-3 gap-4 sm:gap-6">
+                <div class="glass-card p-6">
+                    <div class="feature-icon mb-4">
+                        <span class="material-symbols-rounded text-white">person_off</span>
+                    </div>
+                    <h3 class="text-lg font-bold" data-i18n="about.featureNoAccount">No Account</h3>
+                    <p class="text-white/60 text-sm" data-i18n="about.featureNoAccountDesc">
+                        No need to remember email, password, or username.
+                        Open the browser, play the music.
+                    </p>
+                </div>
+
+                <div class="glass-card p-6">
+                    <div class="feature-icon mb-4">
+                        <span class="material-symbols-rounded text-white">visibility_off</span>
+                    </div>
+                    <h3 class="text-lg font-bold" data-i18n="about.featureNoTracking">No Tracking</h3>
+                    <p class="text-white/60 text-sm" data-i18n="about.featureNoTrackingDesc">
+                        We don't know who listened to what, and we don't want to know.
+                        Your music taste is your business.
+                    </p>
+                </div>
+
+                <div class="glass-card p-6">
+                    <div class="feature-icon mb-4">
+                        <span class="material-symbols-rounded text-white">money_off</span>
+                    </div>
+                    <h3 class="text-lg font-bold" data-i18n="about.featureFree">Completely Free</h3>
+                    <p class="text-white/60 text-sm" data-i18n="about.featureFreeDesc">
+                        No hidden costs, no premium tiers.
+                        Open source, community supported.
+                    </p>
+                </div>
+
+                <div class="glass-card p-6">
+                    <div class="feature-icon mb-4">
+                        <span class="material-symbols-rounded text-white">psychology</span>
+                    </div>
+                    <h3 class="text-lg font-bold" data-i18n="about.featureNoAlgo">No Algorithm</h3>
+                    <p class="text-white/60 text-sm" data-i18n="about.featureNoAlgoDesc">
+                        No "Our picks for you". Make your own playlist,
+                        make your own discoveries.
+                    </p>
+                </div>
+
+                <div class="glass-card p-6">
+                    <div class="feature-icon mb-4">
+                        <span class="material-symbols-rounded text-white">devices</span>
+                    </div>
+                    <h3 class="text-lg font-bold" data-i18n="about.featureLocal">Stays on Your Device</h3>
+                    <p class="text-white/60 text-sm" data-i18n="about.featureLocalDesc">
+                        Songs and playlists stay in the browser's local storage.
+                        Doesn't go to cloud, doesn't reach our servers.
+                    </p>
+                </div>
+
+                <div class="glass-card p-6">
+                    <div class="feature-icon mb-4">
+                        <span class="material-symbols-rounded text-white">code</span>
+                    </div>
+                    <h3 class="text-lg font-bold" data-i18n="about.featureOpenSource">Open Source</h3>
+                    <p class="text-white/60 text-sm" data-i18n="about.featureOpenSourceDesc">
+                        Our code is transparent. See what we do, contribute if you want.
+                        For the community, with the community.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="py-12 sm:py-16 px-4 sm:px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold mb-6 sm:mb-8 text-center"
+                data-i18n="about.privacyTitle">Your Privacy Matters to Us</h2>
+
+            <div class="glass-card p-4 sm:p-6 md:p-10 space-y-4 sm:space-y-6">
+                <div class="highlight-box p-4 rounded-lg">
+                    <p class="text-white/80 text-sm" data-i18n="about.privacyIntro">
+                        At Melech, privacy is a standard feature, not an extra setting.
+                        We don't ask you to create an account, we don't collect your data, we don't track you.
+                        Your music stays only on your device.
+                    </p>
+                </div>
+
+                <div class="space-y-6 text-white/70 text-sm">
+                    <div>
+                        <h3 class="text-white font-bold mb-2" data-i18n="about.privacyNotStoredTitle">What Information
+                            Do We Store?</h3>
+                        <p data-i18n="about.privacyNotStoredDesc" class="italic">(No data is stored, so this section is
+                            empty)</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold mb-2" data-i18n="about.privacyWhereTitle">Where Does Your Data
+                            Stay?</h3>
+                        <p data-i18n="about.privacyWhereDesc" data-i18n-attr="innerHTML">All your music and settings are
+                            stored <strong class="text-white">only in your own
+                                browser</strong>:</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-white/60">
+                            <li data-i18n="about.privacyWhere1">Songs and cover art stay on your device</li>
+                            <li data-i18n="about.privacyWhere2">Playlists are in your browser's memory</li>
+                            <li data-i18n="about.privacyWhere3">Your favorites are only for you</li>
+                            <li data-i18n="about.privacyWhere4">Only you can see your settings</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold mb-2" data-i18n="about.privacyShareTitle">Want to Send a Song to
+                            a Friend?</h3>
+                        <p data-i18n="about.privacyShareDesc">When you use the sharing feature:</p>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-white/60">
+                            <li data-i18n="about.privacyShare1">Songs are temporarily stored on the sharing server (30
+                                minutes)</li>
+                            <li data-i18n="about.privacyShare2">Automatically deleted when time expires</li>
+                            <li data-i18n="about.privacyShare3">Your IP is only recorded to prevent excessive usage</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold mb-2" data-i18n="about.privacyServicesTitle">External Services
+                            We Use</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-white/60">
+                            <li data-i18n="about.privacyServices1" data-i18n-attr="innerHTML"><strong>JukeHost:</strong>
+                                Free music archive management service, store your music for free with JukeHost and
+                                transfer it to Melech whenever you want.</li>
+                            <li data-i18n="about.privacyServices2" data-i18n-attr="innerHTML"><strong>Jamendo:</strong>
+                                For royalty-free music discovery</li>
+                            <li data-i18n="about.privacyServices3" data-i18n-attr="innerHTML"><strong>Radios:</strong>
+                                Live broadcast directly from stations</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold mb-2" data-i18n="about.privacyControlTitle">How Can You Control
+                            Your Data?</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-white/60">
+                            <li data-i18n="about.privacyControl1">You can download all your data using the export
+                                feature</li>
+                            <li data-i18n="about.privacyControl2">You can delete everything by clearing browser data
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold mb-2" data-i18n="about.termsRadioTitle">Radios</h3>
+                        <p class="text-white/60" data-i18n="about.termsRadioDesc">
+                            Radio stations come from external sources. Stations may change,
+                            links may break - we apologize for these situations.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold mb-2" data-i18n="about.termsDataTitle">Is Your Data Safe?</h3>
+                        <p class="text-white/60" data-i18n="about.termsDataDesc" data-i18n-attr="innerHTML">
+                            Your music library and playlists are currently stored only on your device. Keep in mind
+                            that clearing your browser data will delete your local files. To prevent data loss, you can
+                            back up your archive by exporting it or create a cloud-based music library via JukeHost
+                            (<a href="https://jukehost.co.uk/" target="_blank"
+                                class="text-primary-color hover:underline underline-offset-2">jukehost.co.uk</a>).
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-white font-bold mb-2" data-i18n="about.termsLicenseTitle">License and Source
+                            Code</h3>
+                        <ul class="list-disc list-inside mt-2 space-y-1 text-white/60">
+                            <li data-i18n="about.termsLicense1">Melech is published under open source DET-C license</li>
+                            <li data-i18n="about.termsLicense2">Source code is available on GitHub for review</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-4 border-t border-white/10">
+                        <p class="text-white/50 text-xs" data-i18n="about.privacyFooter">
+                            Last updated: April 2026 | Melech Open Source Project
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-12 sm:py-16 px-4 sm:px-6 pb-6">
+        <div class="max-w-2xl mx-auto text-center">
+            <div class="glass-card p-6 sm:p-8 md:p-12">
+                <span
+                    class="material-symbols-rounded text-4xl sm:text-5xl text-[#800020] mb-3 sm:mb-4">music_note</span>
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-bold" data-i18n="about.ctaTitle">Let's Get Started</h2>
+                <p class="text-white/60 mb-5 sm:mb-6 text-sm sm:text-base" data-i18n="about.ctaDesc">
+                    No installation, no waiting. Play your music right now.
+                </p>
+                <a href="../" class="inline-flex items-center gap-2 px-8 py-4 bg-[#800020] hover:bg-[#600018] 
+                          active:scale-95 active:bg-[#500014] text-white rounded-xl font-medium 
+                          transition-all min-h-[52px] min-w-[160px] justify-center">
+                    <span class="material-symbols-rounded text-2xl">play_arrow</span>
+                    <span data-i18n="about.ctaButton">Open Melech</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-6 sm:py-8 px-4 sm:px-6 border-t border-white/5"
+        style="padding-bottom: max(1.5rem, env(safe-area-inset-bottom));">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-3 mb-1">
+                <img src="../resources/MelechLogoWhite.svg" class="w-5 h-5 sm:w-6 sm:h-6" alt="Melech">
+                <span class="text-white/50 text-xs sm:text-sm">Melech™ - Your Music, Your Kingdom.</span>
+                <span class="hidden text-white/50 text-xs sm:text-sm lg:flex">© 2026 XmerOriginals</span>
+            </div>
+            <span class="text-white/50 text-xs sm:text-sm mb-2 lg:hidden">© 2026 XmerOriginals</span>
+            <div class="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm text-white/40">
+                <a href="https://github.com/melechproject/" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-white/70 transition-colors px-2 py-1">GitHub</a>
+                <a href="https://buymeacoffee.com/xmer" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-white/70 transition-colors px-2 py-1">Donate</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../src/scripts/language.js"></script>
+    <script>
+        (function () {
+            document.addEventListener('contextmenu', event => event.preventDefault());
+
+            const carousel = document.getElementById('storyCarousel');
+            const cards = carousel.querySelectorAll('.story-card');
+            const dots = document.querySelectorAll('.story-dot-indicator');
+            const prevBtn = document.getElementById('storyPrev');
+            const nextBtn = document.getElementById('storyNext');
+            let currentIndex = 0;
+            const totalCards = cards.length;
+            let touchStartX = 0;
+            let touchEndX = 0;
+            let isAnimating = false;
+
+            function updateCarousel(newIndex) {
+                if (isAnimating || newIndex === currentIndex) return;
+                isAnimating = true;
+
+                const direction = newIndex > currentIndex ? 'next' : 'prev';
+                const currentCard = cards[currentIndex];
+                const nextCard = cards[newIndex];
+
+                const currentHeight = currentCard.offsetHeight;
+                nextCard.classList.add('active');
+                const nextHeight = nextCard.offsetHeight;
+                nextCard.classList.remove('active');
+
+                carousel.style.minHeight = currentHeight + 'px';
+                requestAnimationFrame(() => {
+                    carousel.style.minHeight = nextHeight + 'px';
+                });
+
+                currentCard.classList.remove('active');
+                currentCard.classList.add(direction === 'next' ? 'slide-out-left' : 'slide-out-left');
+
+                nextCard.classList.remove('slide-out-left', 'slide-out-right');
+                nextCard.classList.add('active');
+
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === newIndex);
+                });
+
+                currentIndex = newIndex;
+
+                setTimeout(() => {
+                    isAnimating = false;
+                    cards.forEach((card, index) => {
+                        if (index !== currentIndex) {
+                            card.classList.remove('active', 'slide-out-left', 'slide-out-right');
+                        }
+                    });
+                }, 500);
+            }
+
+            function goToNext() {
+                const newIndex = (currentIndex + 1) % totalCards;
+                updateCarousel(newIndex);
+            }
+
+            function goToPrev() {
+                const newIndex = (currentIndex - 1 + totalCards) % totalCards;
+                updateCarousel(newIndex);
+            }
+
+            prevBtn.addEventListener('click', goToPrev);
+            nextBtn.addEventListener('click', goToNext);
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => updateCarousel(index));
+            });
+
+            carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            carousel.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+
+            let isDragging = false;
+            let mouseStartX = 0;
+
+            carousel.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                mouseStartX = e.screenX;
+                e.preventDefault();
+            });
+
+            carousel.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+            });
+
+            carousel.addEventListener('mouseup', (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                const mouseEndX = e.screenX;
+                const diff = mouseStartX - mouseEndX;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        goToNext();
+                    } else {
+                        goToPrev();
+                    }
+                }
+            });
+
+            carousel.addEventListener('mouseleave', () => {
+                isDragging = false;
+            });
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const diff = touchStartX - touchEndX;
+
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0) {
+                        goToNext();
+                    } else {
+                        goToPrev();
+                    }
+                }
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    goToPrev();
+                } else if (e.key === 'ArrowRight') {
+                    goToNext();
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>

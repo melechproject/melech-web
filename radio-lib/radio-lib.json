@@ -1,0 +1,137 @@
+[
+  {
+    "name": "JoyFM",
+    "group": "JoyTürk",
+    "streamUrl": "http://46.20.3.204:8010/joyfm"
+  },
+  {
+    "name": "JoyTürk",
+    "group": "JoyTürk",
+    "streamUrl": "https://27753.live.streamtheworld.com/JOY_TURK.mp3"
+  },
+  {
+    "name": "KaradenizFM",
+    "group": "Karma",
+    "streamUrl": "https://moondigitaledge.radyotvonline.net/karadenizfm/playlist.m3u8"
+  },
+  {
+    "name": "FenomenFM",
+    "group": "Karma",
+    "streamUrl": "https://live.radyofenomen.com/fenomen/128/icecast.audio?%20/;stream.mp3"
+  },
+  {
+    "name": "SüperFM",
+    "group": "Karma",
+    "streamUrl": "https://28513.live.streamtheworld.com/SUPER_FM128AAC.aac?/;stream.mp3"
+  },
+  {
+    "name": "Radyo 45'lik",
+    "group": "Karma",
+    "streamUrl": "https://stream.radyo45lik.com:4545/stream"
+  },
+  {
+    "name": "Radyo Alaturka",
+    "group": "Karma",
+    "streamUrl": "https://yayin.jumboserver.net:9100/stream?/;stream.mp3"
+  },
+  {
+    "name": "MetroFM",
+    "group": "Karma",
+    "streamUrl": "https://25583.live.streamtheworld.com/METRO_FM128AAC.aac?/;stream.mp3"
+  },
+  {
+    "name": "SlowTürk",
+    "group": "Karma",
+    "streamUrl": "https://radyo.duhnet.tv/slowturk?/;stream.mp3"
+  },
+  {
+    "name": "AşkFM",
+    "group": "Karma",
+    "streamUrl": "https://stream.netradyom.com/radio/8000/radio.mp3?/;stream.mp3"
+  },
+  {
+    "name": "Polis Radyosu",
+    "group": "Karma",
+    "streamUrl": "https://m.egm.gov.tr:8093/stream?/;stream.mp3"
+  },
+  {
+    "name": "BestFM",
+    "group": "Karma",
+    "streamUrl": "https://officialbestfm.radyotvonline.net/bestfmofficial?/;stream.mp3"
+  },
+  {
+    "name": "Radio Mydonose",
+    "group": "Karma",
+    "streamUrl": "https://playerservices.streamtheworld.com/api/livestream-redirect/RADIO_MYDONOSE128AAC.aac?/;stream.mp3"
+  },
+  {
+    "name": "Radyo Seymen",
+    "group": "Karma",
+    "streamUrl": "https://yayin.radyoseymen.com.tr:1070/stream?/;stream.mp3"
+  },
+  {
+    "name": "Pal Doğa",
+    "group": "Karma",
+    "streamUrl": "https://free.rcast.net/200259"
+  },
+  {
+    "name": "Radyo Megasite",
+    "group": "Karma",
+    "streamUrl": "https://stream.netradyom.com/listen/megasite/radio.mp3/;stream.mp3"
+  },
+  {
+    "name": "Efkar FM",
+    "group": "Karma",
+    "streamUrl": "https://playerservices.streamtheworld.com/api/livestream-redirect/EFKAR128AAC.aac?/;stream.mp3"
+  },
+  {
+    "name": "Radyo Baba",
+    "group": "Karma",
+    "streamUrl": "https://officialbabaradyo.radyotvonline.net/babaofficial?/;stream.mp3"
+  },
+  {
+    "name": "KEXP",
+    "group": "Karma",
+    "streamUrl": "http://live-mp3-128.kexp.org/kexp128.mp3"
+  },
+  {
+    "name": "NPR",
+    "group": "Karma",
+    "streamUrl": "https://npr-ice.streamguys1.com/live.mp3"
+  },
+  {
+    "name": "Radio Paradise",
+    "group": "Karma",
+    "streamUrl": "http://stream.radioparadise.com/mp3-192"
+  },
+  {
+    "name": "Classic FM",
+    "group": "Karma",
+    "streamUrl": "https://media-ice.musicradio.com/ClassicFMMP3"
+  },
+  {
+    "name": "FIP",
+    "group": "Karma",
+    "streamUrl": "https://icecast.radiofrance.fr/fip-midfi.mp3"
+  },
+  {
+    "name": "TRT Radyo 1",
+    "group": "TRT",
+    "streamUrl": "https://trt.radyotvonline.net/trt1"
+  },
+  {
+    "name": "TRT FM",
+    "group": "TRT",
+    "streamUrl": "https://trt.radyotvonline.net/trtfm"
+  },
+  {
+    "name": "TRT Radyo Haber",
+    "group": "TRT",
+    "streamUrl": "https://trt.radyotvonline.net/trthaber"
+  },
+  {
+    "name": "Bayram FM",
+    "group": "Bayram FM",
+    "streamUrl": "https://sslyayin.netyayin.net/3442/stream/;stream.mp3"
+  }
+]

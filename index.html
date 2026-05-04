@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="app.title">Melech™ | Your Music, Your Kingdom.</title>
+    <meta name="description"
+        content="Melech is a free, open-source music player that works offline. No account, no tracking, no subscription. Your music stays on your device. Create playlists, enjoy gapless playback, and discover royalty-free music.">
+    <meta name="keywords"
+        content="music player, offline music, open source music, free music player, no subscription, privacy focused, local music player, web music player, PWA music, playlist manager">
+    <meta name="author" content="Melech">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://melech.xmeroriginals.com">
+
+    <meta property="og:title" content="Melech™ | Your Music, Your Kingdom">
+    <meta property="og:description"
+        content="A free, open-source music player that works offline. No account, no tracking, no subscription. Your music stays on your device.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://melech.xmeroriginals.com">
+    <meta property="og:image" content="https://melech.xmeroriginals.com/resources/MelechCover.png">
+    <meta property="og:site_name" content="Melech">
+    <meta property="og:locale" content="en_US">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Melech™ | Your Music, Your Kingdom">
+    <meta name="twitter:description"
+        content="A free, open-source music player that works offline. No account, no tracking, no subscription.">
+    <meta name="twitter:image" content="https://melech.xmeroriginals.com/resources/MelechCover.png">
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#140004">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Melech">
+    <link rel="apple-touch-icon" href="resources/512x512.png">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="resources/MelechLogoWhite.svg">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Melech",
+        "headline": "Melech™ | Your Music, Your Kingdom",
+        "description": "A free, open-source music player that works offline. No account, no tracking, no subscription.",
+        "url": "https://melech.xmeroriginals.com",
+        "applicationCategory": "MusicApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "featureList": [
+            "Offline music playback",
+            "No account required",
+            "No tracking",
+            "Gapless playback",
+            "Playlist management",
+            "Smart volume",
+            "Radio stations",
+            "Import/Export library"
+        ],
+        "author": {
+            "@type": "Organization",
+            "name": "Melech Open Source Project",
+            "url": "https://github.com/melechproject/"
+        },
+        "image": "https://melech.xmeroriginals.com/resources/MelechCover.png",
+        "screenshot": "https://melech.xmeroriginals.com/resources/MelechCover.png"
+    }
+    </script>
+
+    <script src="lib/tailwind.js"></script>
+    <link rel="stylesheet" href="src/style.css">
+    <link rel="stylesheet" href="src/styles/navbarMenu.css">
+    <link rel="stylesheet" href="src/styles/playlist.css">
+    <style>
+        @font-face {
+            font-family: 'Material Symbols Rounded';
+            src: url('resources/icons/MaterialSymbolsRounded_Filled-Medium.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .material-symbols-rounded {
+            font-family: 'Material Symbols Rounded';
+            font-weight: normal;
+            font-size: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            vertical-align: middle;
+        }
+
+        @font-face {
+            font-family: 'Poppins';
+            src: url('resources/fonts/Poppins-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        #desktopNowPlaying {
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            #desktopNowPlaying {
+                display: flex;
+                position: fixed;
+                right: 2rem;
+                top: 2rem;
+                width: 20rem;
+                height: 100vh;
+                z-index: 40;
+                transition: height 0.5s ease;
+            }
+
+            #contentArea {
+                margin-right: calc(20rem + 1.5rem);
+            }
+        }
+
+        #desktopNowPlaying .custom-scrollbar {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            overflow-x: hidden;
+        }
+
+        :root {
+            --primary-color: #800020;
+            --primary-color-opacity: #8000205a;
+            --secondary-color: #73021e;
+            --overlay-color: #000000c4;
+            --overlay-blur: 5px;
+            --text-color: #ffffff;
+            --background-color: #140004;
+            --nav-link-color: #800020;
+            --button-deactive-color: rgba(162, 162, 162, 1);
+        }
+
+        @media (max-width: 576px) {
+            #menuControlBtn {
+                display: flex;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="has-footer no-scrollbar">
+    <div id="playlistOverlay" role="dialog" aria-modal="true" aria-label="Menu"
+        class="fixed inset-y-0 left-0 w-full sm:w-[25rem] bg-[#0D0204] shadow-2xl z-[70] flex flex-col -translate-x-full opacity-0 transition-[transform,opacity] duration-300 ease-in-out [&.open]:translate-x-0 [&.open]:opacity-100 border-r border-white/10 pointer-events-none [&.open]:pointer-events-auto will-change-transform">
+        <div class="flex flex-col h-full pt-safe-top pb-safe-bottom">
+            <div class="flex items-center justify-between p-4 border-b border-white/10">
+                <h2 id="menuTopTitle" class="text-xl font-bold text-white flex items-center gap-2">
+                    <span id="panelGreeting"></span>
+                </h2>
+                <button id="playlistCloseBtn" aria-label="Close" data-i18n-aria="upload.close"
+                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-all">
+                    <span class="material-symbols-rounded text-white">close</span>
+                </button>
+            </div>
+
+            <div id="playlistList" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"
+                style="padding-bottom: 5rem;">
+
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
+            style="background: linear-gradient(to top, rgba(13,2,4,0.95) 0%, rgba(13,2,4,0.8) 40%, transparent 100%);">
+        </div>
+        <div class="absolute bottom-4 left-3 pointer-events-auto flex items-center gap-2">
+            <img src="./resources/JH-PartnerLogo.png" id="jukehostStandaloneBtn"
+                class="w-14 h-14 flex items-center justify-center rounded-full shadow-lg transition-all duration-300 ease-out text-white shrink-0 z-10 active:scale-95 cursor-pointer"
+                aria-label="Import from JukeHost">
+            <div id="playlistFabContainer"
+                class="flex items-center rounded-full shadow-lg transition-all duration-300 ease-out"
+                style="width: 56px; height: 56px; background: var(--primary-color); overflow: hidden; -webkit-transform: translateZ(0); transform: translateZ(0);">
+                <style>
+                    #playlistFabContainer::-webkit-scrollbar {
+                        display: none;
+                    }
+                </style>
+                <button id="playlistFabBtn"
+                    class="w-14 h-14 flex items-center justify-center text-white shrink-0 sticky left-0 z-10"
+                    style="background: var(--primary-color); -webkit-backface-visibility: hidden; backface-visibility: hidden;">
+                    <span id="playlistFabIcon" class="material-symbols-rounded text-2xl">more_vert</span>
+                </button>
+                <div id="playlistFabActions"
+                    class="flex items-center gap-2 pr-3 opacity-0 transition-[max-width,opacity] duration-300 ease-out whitespace-nowrap shrink-0 will-change-[max-width,opacity]"
+                    style="max-width: 0; overflow: hidden; overflow-x: auto;">
+                    <button id="createPlaylistBtn"
+                        class="flex items-center gap-2 px-4 py-2.5 text-white rounded-full text-sm font-medium transition-all shrink-0">
+                        <span class="material-symbols-rounded text-lg">add</span>
+                        <span data-i18n="playlist.newPlaylist">New Playlist</span>
+                    </button>
+                    <button id="importPlaylistBtn"
+                        class="flex items-center gap-2 px-4 py-2.5 text-white rounded-full text-sm font-medium transition-all shrink-0">
+                        <span class="material-symbols-rounded text-lg">upload</span>
+                        <span data-i18n="playlist.import">Import</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menuOverlay" role="dialog" aria-modal="true" aria-label="Quick Access" data-i18n-aria="nav.menu">
+        <button id="menuCloseBtn" aria-label="Close Menu" data-i18n-aria="nav.closeMenu">
+            <span class="material-symbols-rounded" translate="no">close</span>
+        </button>
+        <a href="#" id="mobileRadioBtn" class="flex items-center gap-2 text-lg text-white">
+            <span class="material-symbols-rounded text-4xl" translate="no">
+                radio
+            </span>
+            <span data-i18n="nav.radio">Radio</span>
+        </a>
+        <a id="donateBtn" href="https://buymeacoffee.com/xmer" target="_blank"
+            class="flex items-center gap-2 text-lg text-white">
+            <span class="material-symbols-rounded text-4xl" translate="no">
+                volunteer_activism
+            </span>
+            <span data-i18n="nav.donate">Donate</span>
+        </a>
+        <a href="about/" target="_blank" class="flex items-center gap-2 text-lg text-white">
+            <span class="material-symbols-rounded text-4xl" translate="no">
+                help
+            </span>
+            <span data-i18n="nav.about">About</span>
+        </a>
+    </div>
+
+    <main class="flex flex-col md:flex-row gap-6 p-4 md:p-8 relative"
+        style="background-color: var(--background-color); min-height: 100vh;">
+        <div id="coverDynamicColorBg"></div>
+        <div id="contentArea" class="flex-1">
+
+            <div id="staticNavbarContainer" class="navbar-container mb-8">
+                <nav class="navbar" aria-label="Quick Access" data-i18n-aria="nav.menu">
+                    <div>
+                        <img src="resources/MelechLogoWhite.svg" class="navbar-logo" alt="Melech Logo">
+                    </div>
+                    <div class="flex items-center">
+                        <div class="nav-links mr-2">
+                            <a href="#" id="desktopRadioBtn" class="flex items-center text-white">
+                                <span class="material-symbols-rounded text-2xl" translate="no">radio</span>
+                            </a>
+                            <a class="donate-btn flex items-center text-white" id="donateBtn"
+                                href="https://buymeacoffee.com/xmer" target="_blank">
+                                <span class="material-symbols-rounded text-2xl" translate="no">volunteer_activism</span>
+                            </a>
+                            <a href="about/" target="_blank" class="flex items-center text-white mr-2">
+                                <span class="material-symbols-rounded text-2xl" translate="no">help</span>
+                            </a>
+                        </div>
+
+                        <button id="menuControlBtn" aria-label="Open Menu" aria-expanded="false"
+                            aria-controls="menuOverlay">
+                            <span class="material-symbols-rounded text-white" translate="no">menu</span>
+                        </button>
+
+                        <button id="playlistMenuBtn" aria-label="Playlists" data-i18n-aria="nav.playlists"
+                            aria-expanded="false"
+                            class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all">
+                            <span class="material-symbols-rounded text-white" translate="no">queue_music</span>
+                        </button>
+
+                        <button id="settingsBtnMain" aria-label="Settings"
+                            class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all ml-2">
+                            <span class="material-symbols-rounded text-white" translate="no">settings</span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+
+            <div id="fixedNavbarContainer"></div>
+
+            <section id="songLibrary" class="mt-8">
+                <div id="songLibraryHeader" class="flex items-center justify-between gap-3 mb-6">
+                    <div id="musicSourceTabs"
+                        class="flex items-center gap-4 whitespace-nowrap overflow-hidden transition-all duration-300"
+                        role="tablist" aria-label="Music source">
+                        <button id="exploreTab" role="tab" aria-selected="true" aria-controls="exploreContent"
+                            class="text-2xl md:text-3xl font-bold text-white transition-all hover:text-white/80 border-b-2 border-[var(--primary-color)] whitespace-nowrap"
+                            data-i18n="tabs.explore">Explore</button>
+                        <button id="libraryTab" role="tab" aria-selected="false" aria-controls="libraryContent"
+                            class="text-2xl md:text-3xl font-bold text-white/50 transition-all hover:text-white border-b-2 border-transparent whitespace-nowrap"
+                            data-i18n="tabs.library">Library</button>
+                    </div>
+                    <div id="songLibraryActions" class="flex items-center gap-2 flex-shrink-0">
+                        <div class="relative flex items-center">
+                            <input id="songSearch" type="search" enterkeyhint="search"
+                                class="px-4 py-2 rounded-full bg-white/5 border text-sm placeholder-white/40 border-white/20 hover:bg-white/10 transition-all text-white/70 hover:text-white w-[200px] focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)]"
+                                data-i18n-placeholder="search.searchSong">
+                            <span id="clearSearch"
+                                class="material-symbols-rounded absolute right-3 text-white/20 hover:text-white/40 cursor-pointer hidden select-none"
+                                style="font-size: 18px;" translate="no">close</span>
+                        </div>
+                        <button id="mobileSearchToggle" type="button"
+                            class="hidden p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors text-white/70 hover:text-white"
+                            aria-label="Search" aria-expanded="false">
+                            <span class="material-symbols-rounded" translate="no">search</span>
+                        </button>
+                        <button id="refreshLibrary"
+                            class="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors text-white/70 hover:text-white">
+                            <span class="material-symbols-rounded" translate="no">refresh</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="exploreContent" role="tabpanel" aria-labelledby="exploreTab">
+                    <div id="songGrid"
+                        class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+                        <div class="animate-pulse bg-white/5 aspect-square rounded-2xl"></div>
+                        <div class="animate-pulse bg-white/5 aspect-square rounded-2xl"></div>
+                        <div class="animate-pulse bg-white/5 aspect-square rounded-2xl"></div>
+                        <div class="animate-pulse bg-white/5 aspect-square rounded-2xl"></div>
+                        <div class="animate-pulse bg-white/5 aspect-square rounded-2xl"></div>
+                    </div>
+                </div>
+                <div id="libraryContent" role="tabpanel" aria-labelledby="libraryTab" class="hidden">
+                    <div id="userSongGrid"
+                        class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+                        <p class="col-span-full text-center text-white/50 py-10" data-i18n="library.emptyLibraryText">
+                            This corner is the summer corner, that corner is the winter corner, in the middle is a water
+                            bottle.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <aside id="desktopNowPlaying"
+            class="hidden lg:flex w-80 h-auto shrink-0 flex-col p-6 rounded-3xl bg-white/5 border border-white/5">
+            <div id="sidePlayerImageCase"
+                class="aspect-square w-full mb-6 rounded-2xl bg-white/5 overflow-hidden shadow-2xl relative group player-image-container">
+                <img id="sidePlayerImage" src="" alt=""
+                    class="w-full h-full object-cover opacity-0 transition-opacity duration-500">
+                <div id="sidePlayerPlaceholder" class="absolute inset-0 flex items-center justify-center text-white/20">
+                    <span class="material-symbols-rounded !text-6xl">music_note</span>
+                </div>
+
+                <div class="track-loading-overlay hidden" id="sidePlayerLoading">
+                    <div class="track-loading-spinner"></div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between gap-4 mb-6">
+                <div class="flex flex-col gap-1 min-w-0">
+                    <h3 id="sidePlayerTitle" class="text-xl font-bold text-white truncate"
+                        data-i18n="player.noSongPlaying">No song playing</h3>
+                    <p id="sidePlayerArtist" class="text-white/60 truncate" data-i18n="player.noArtistSelected">No
+                        artist selected</p>
+                </div>
+                <button id="sidePlayerFavoriteBtn"
+                    class="p-2 text-white/40 hover:text-white transition-all transform active:scale-90 opacity-0 pointer-events-none shrink-0">
+                    <span class="material-symbols-rounded !text-2xl">favorite</span>
+                </button>
+            </div>
+            <div class="pt-3 border-t border-white/5 flex flex-col min-h-0">
+                <div class="flex items-center justify-between mb-2 text-sm text-white/40">
+                    <span data-i18n="player.nextTrack">Next Track</span>
+                </div>
+                <div id="nextTracksGrid" class="flex flex-col gap-3 h-48 overflow-y-auto pr-2 custom-scrollbar">
+                    <p class="text-xs text-white/20 italic" data-i18n="player.queueEmpty">Queue is empty.</p>
+                </div>
+                <div id="nextTrackInfo" class="flex items-center gap-2 hidden">
+                    <img src="./resources/MelechCover.png" id="nextTrackImage" alt="Cover" class="w-12 h-12 rounded-lg">
+                    <div class="flex-1 min-w-0">
+                        <h4 id="nextTrackTitle" class="text-sm font-semibold text-white truncate">Next track</h4>
+                        <p id="nextTrackArtist" class="text-xs text-white/60 truncate">Artist</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <div id="mobileMiniPlayer"
+        class="lg:hidden fixed left-2 right-2 z-[55] bg-[#1a0a0f] border border-white/10 rounded-xl translate-y-64 opacity-0 transition-[transform,opacity] duration-500 shadow-2xl pointer-events-none overflow-hidden will-change-transform">
+        <div class="flex items-center gap-3 p-2 relative">
+            <div class="flex-1 flex items-center gap-3 min-w-0" id="miniPlayerInfo">
+                <div
+                    class="w-10 h-10 rounded-lg bg-white/20 overflow-hidden shrink-0 shadow-lg player-image-container relative">
+                    <img id="miniPlayerImage" src="" alt="" class="w-full h-full object-cover">
+
+                    <div class="track-loading-overlay hidden" id="miniPlayerLoading">
+                        <div class="track-loading-spinner"></div>
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 id="miniPlayerTitle" class="text-xs font-bold text-white truncate">Title</h4>
+                    <p id="miniPlayerArtist" class="text-[10px] text-white/60 truncate">Artist</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-0">
+                <button id="favoriteMiniPlayerBtn"
+                    class="w-10 h-10 flex items-center justify-center text-white/40 active:scale-90 transition-all">
+                    <span class="material-symbols-rounded !text-xl">favorite</span>
+                </button>
+                <button id="miniPlayPauseBtn"
+                    class="w-10 h-10 flex items-center justify-center text-white active:scale-90 transition-all">
+                    <span class="material-symbols-rounded !text-2xl">play_arrow</span>
+                </button>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 h-[2px] bg-white/20 w-full">
+            <div id="miniProgressLine" class="h-full bg-[var(--primary-color)] w-0 transition-all duration-300"></div>
+        </div>
+    </div>
+
+    <div id="mobileFullPlayer"
+        class="lg:hidden fixed inset-0 z-[100] bg-[#140004] translate-y-full transition-transform duration-500 flex flex-col">
+        <div class="flex items-center justify-between p-4 pt-safe-top">
+            <button id="closeFullPlayerBtn" class="p-2 text-white/50 hover:text-white transition-colors">
+                <span class="material-symbols-rounded !text-3xl">expand_more</span>
+            </button>
+        </div>
+
+        <div class="flex-1 flex flex-col items-center justify-center px-8 pb-4 min-h-0">
+            <div
+                class="w-full max-w-[280px] aspect-square rounded-2xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.6)] bg-white/5 mb-6 player-image-container relative">
+                <img id="fullPlayerImage" src="" alt="" class="w-full h-full object-cover">
+
+                <div class="track-loading-overlay hidden" id="fullPlayerLoading">
+                    <div class="track-loading-spinner"></div>
+                </div>
+            </div>
+
+            <div class="w-full text-center mb-6 relative">
+                <h2 id="fullPlayerTitle" class="text-xl sm:text-2xl font-bold text-white mb-1 truncate px-2">Song Title
+                </h2>
+                <div class="flex items-center justify-center gap-2">
+                    <p id="fullPlayerArtist" class="text-base text-white/60 truncate max-w-[70%]">Artist Name</p>
+                    <button id="fullPlayerFavoriteBtn" class="text-white/40 active:scale-90 transition-all p-1">
+                        <span class="material-symbols-rounded !text-xl">favorite</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-6 pb-safe-bottom pb-8 pt-2">
+            <div class="flex flex-col gap-5">
+                <div class="flex flex-col gap-2 relative">
+                    <input type="range" id="fullPlayerProgress" class="player-slider" min="0" max="100" value="0">
+                    <div id="liveIndicatorFull"
+                        class="absolute inset-0 flex items-center justify-center pointer-events-none hidden"
+                        style="height: 4px; top: 0;">
+                        <span
+                            class="bg-[var(--primary-color)] text-white text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1.5 shadow-[0_0_15px_rgba(128,0,32,0.5)]">
+                            <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                            <span data-i18n="radio.live">Live</span>
+                        </span>
+                    </div>
+                    <div class="flex justify-between text-xs text-white/40 font-mono">
+                        <span id="fullPlayerTime">0:00</span>
+                        <span id="fullPlayerDuration">0:00</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-center gap-3 xs:gap-4 sm:gap-6">
+                    <button class="text-white/40 hover:text-white transition-colors p-1 flex-shrink-0">
+                        <span class="material-symbols-rounded !text-xl sm:!text-2xl">shuffle</span>
+                    </button>
+                    <button id="fullPlayerPrevBtn"
+                        class="text-white hover:text-white/80 transition-colors p-1 flex-shrink-0">
+                        <span class="material-symbols-rounded !text-3xl sm:!text-4xl">skip_previous</span>
+                    </button>
+                    <button id="fullPlayPauseBtn"
+                        class="w-14 h-14 sm:w-16 sm:h-16 bg-white text-black rounded-full flex items-center justify-center shadow-2xl active:scale-95 transition-all hover:scale-105 flex-shrink-0">
+                        <span class="material-symbols-rounded !text-3xl sm:!text-4xl">play_arrow</span>
+                    </button>
+                    <button id="fullPlayerNextBtn"
+                        class="text-white hover:text-white/80 transition-colors p-1 flex-shrink-0">
+                        <span class="material-symbols-rounded !text-3xl sm:!text-4xl">skip_next</span>
+                    </button>
+                    <button class="text-white/40 hover:text-white transition-colors p-1 flex-shrink-0">
+                        <span class="material-symbols-rounded !text-xl sm:!text-2xl">repeat</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="musicPlayerFooter"
+        class="fixed bottom-0 left-0 right-0 z-[60] bg-[#0D0204] border-t border-white/5 text-white transition-[transform,opacity] duration-500 shadow-[0_-10px_40px_rgba(0,0,0,0.8)]"
+        style="padding-bottom: calc(1rem + env(safe-area-inset-bottom))">
+
+        <div class="md:hidden w-full px-0 pt-0 relative flex items-center justify-center">
+            <input type="range" id="mobileProgress" class="player-slider" min="0" max="100" value="0">
+            <div id="liveIndicatorMobile"
+                class="absolute inset-0 flex items-center justify-center pointer-events-none hidden">
+                <span
+                    class="bg-[var(--primary-color)] mt-3 text-white text-[9px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 shadow-[0_0_10px_rgba(128,0,32,0.5)]">
+                    <span class="w-1 h-1 bg-white rounded-full animate-pulse"></span>
+                    <span data-i18n="radio.live">Live</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="max-w-[1920px] mx-auto px-4 md:px-8 py-5 md:py-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-8 max-w-4xl mx-auto">
+                <div class="flex items-center justify-between md:justify-start md:gap-6 order-3 md:order-1 md:w-[30%]">
+                    <div class="flex items-center gap-4 md:gap-2 flex-1 md:flex-none justify-center">
+                        <button id="replay10Btn"
+                            class="text-[var(--button-deactive-color)] hover:text-white transition-colors active:scale-90 p-1">
+                            <span class="material-symbols-rounded !text-xl">replay_10</span>
+                        </button>
+                        <button id="skipPrevBtn"
+                            class="text-white/70 hover:text-white hover:scale-110 active:scale-90 transition-all p-2">
+                            <span class="material-symbols-rounded !text-3xl md:!text-2xl">skip_previous</span>
+                        </button>
+
+                        <button id="playPauseBtn"
+                            class="w-14 h-14 md:w-12 md:h-12 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                            <span class="material-symbols-rounded !text-4xl md:!text-3xl">play_arrow</span>
+                        </button>
+
+                        <button id="skipNextBtn"
+                            class="text-white/70 hover:text-white hover:scale-110 active:scale-90 transition-all p-2">
+                            <span class="material-symbols-rounded !text-3xl md:!text-2xl">skip_next</span>
+                        </button>
+                        <button id="forward10Btn"
+                            class="text-[var(--button-deactive-color)] hover:text-white transition-colors active:scale-90 p-1">
+                            <span class="material-symbols-rounded !text-xl">forward_10</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex order-2 flex-1 flex-col items-center gap-1 min-w-0">
+                    <div class="w-full relative h-1.5 group cursor-pointer flex items-center">
+                        <span id="trackTime"
+                            class="text-[11px] text-[var(--button-deactive-color)] w-12 text-right mr-3 font-mono">-:--</span>
+                        <input type="range" id="trackProgress" class="player-slider" min="0" max="100" value="0">
+                        <div id="liveIndicator"
+                            class="absolute inset-0 flex items-center justify-center pointer-events-none hidden">
+                            <span
+                                class="bg-[var(--primary-color)] text-white text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1.5 shadow-[0_0_15px_rgba(128,0,32,0.5)]">
+                                <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                                <span data-i18n="radio.live">Live</span>
+                            </span>
+                        </div>
+                        <span id="trackDuration"
+                            class="text-[11px] text-[var(--button-deactive-color)] w-12 ml-3 font-mono">-:--</span>
+                    </div>
+                </div>
+
+                <div
+                    class="flex items-center justify-center md:justify-end gap-5 md:gap-4 order-2 md:order-3 md:w-[30%]">
+                    <button id="favoriteFooterBtn"
+                        class="hidden lg:flex text-white/40 hover:text-white transition-all transform active:scale-90 p-1 opacity-0 pointer-events-none">
+                        <span class="material-symbols-rounded !text-[22px] md:!text-[20px]">favorite</span>
+                    </button>
+
+                    <button id="shuffleBtn"
+                        class="text-[var(--button-deactive-color)] hover:text-white transition-all transform active:scale-90 p-1">
+                        <span class="material-symbols-rounded !text-[22px] md:!text-[20px]">shuffle</span>
+                    </button>
+
+                    <button id="loopBtn"
+                        class="text-[var(--button-deactive-color)] hover:text-white transition-all transform active:scale-90 p-1 relative">
+                        <span id="loopIcon" class="material-symbols-rounded !text-[22px] md:!text-[20px]">repeat</span>
+                    </button>
+
+                    <div class="flex items-center gap-3 group">
+                        <button id="volumeBtn"
+                            class="text-[var(--button-deactive-color)] group-hover:text-white transition-colors p-1">
+                            <span class="material-symbols-rounded !text-[24px] md:!text-[20px]">volume_up</span>
+                        </button>
+                        <div class="flex flex-1 items-center translate-y-[1px]">
+                            <input type="range" id="volumeSlider" class="volume-slider w-24" min="0" max="100"
+                                value="66">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="playlistDetailPanel"
+        class="fixed inset-y-0 left-0 w-full sm:w-[25rem] bg-[#0D0204] z-[75] flex flex-col -translate-x-full opacity-0 transition-[transform,opacity] duration-300 ease-in-out [&.open]:translate-x-0 [&.open]:opacity-100 border-r border-white/10 pointer-events-none [&.open]:pointer-events-auto will-change-transform">
+        <div class="flex flex-col h-full pt-safe-top pb-safe-bottom">
+            <div class="flex items-center justify-between p-4 border-b border-white/10">
+                <button id="playlistDetailPlayBtn"
+                    class="flex items-center gap-2 px-4 py-2 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all">
+                    <span class="material-symbols-rounded">play_arrow</span>
+                    <span class="text-sm font-medium whitespace-nowrap" data-i18n="player.play">Play</span>
+                </button>
+                <button id="playlistDetailBackBtn"
+                    class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-all">
+                    <span class="material-symbols-rounded text-white">arrow_back</span>
+                </button>
+            </div>
+
+            <div class="p-4 border-b border-white/10 bg-white/5">
+                <h1 id="playlistDetailTitle" class="text-2xl font-bold text-white truncate">Playlist Name</h1>
+                <p id="playlistDetailCount" class="text-white/50 text-sm">0 songs</p>
+            </div>
+
+            <div id="playlistDetailTracks" class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+            </div>
+        </div>
+    </div>
+
+    <div id="createPlaylistModal"
+        class="fixed inset-0 z-[80] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80" id="createPlaylistBackdrop"></div>
+        <div
+            class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-xl font-bold text-white mb-4" data-i18n="playlist.createPlaylist">Create Playlist</h3>
+            <div class="flex items-stretch gap-2 h-[105px] mb-4">
+                <div class="h-full aspect-square flex-shrink-0">
+                    <div id="createPlaylistCoverPreview"
+                        class="relative h-full w-full rounded-xl overflow-hidden cursor-pointer group">
+                        <img id="createPlaylistCoverImg" src="./resources/MelechCover.png" alt="Cover"
+                            data-i18n-attr="alt" data-i18n="playlist.coverImage" class="w-full h-full object-cover">
+                        <div id="createPlaylistCoverPlaceholder"
+                            class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="material-symbols-rounded !text-4xl mb-2">image</span>
+                        </div>
+                        <div
+                            class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="material-symbols-rounded text-white !text-3xl">edit</span>
+                        </div>
+                    </div>
+                    <input type="file" id="createPlaylistCoverInput" accept="image/*" class="hidden">
+                </div>
+
+                <div class="flex flex-col gap-3 justify-between flex-grow">
+                    <button id="createPlaylistCoverBtn"
+                        class="w-full h-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
+                        <span class="material-symbols-rounded !text-lg">image</span>
+                        Cover Image
+                    </button>
+
+                    <input type="text" id="playlistNameInput" placeholder="My Awesome Playlist..."
+                        data-i18n-placeholder="playlist.playlistNamePlaceholder"
+                        class="w-full h-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button id="cancelCreatePlaylist"
+                    class="flex-1 py-3 px-4 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all"
+                    data-i18n="playlist.cancel">Cancel</button>
+                <button id="confirmCreatePlaylist"
+                    class="flex-1 py-3 px-4 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all"
+                    data-i18n="playlist.create">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addToPlaylistModal"
+        class="fixed inset-0 z-[80] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80" id="addToPlaylistBackdrop"></div>
+        <div class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl max-h-[80vh] flex flex-col">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <span class="material-symbols-rounded text-[var(--primary-color)]">playlist_add</span>
+                <span data-i18n="playlist.addToPlaylist">Add to Playlist</span>
+            </h3>
+            <div id="addToPlaylistList" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar mb-4">
+            </div>
+            <button id="cancelAddToPlaylist"
+                class="w-full py-3 px-4 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all"
+                data-i18n="playlist.cancel">Cancel</button>
+        </div>
+    </div>
+
+    <div id="playlistContextMenu"
+        class="fixed z-[100] bg-[#1a0a0f] border border-white/10 rounded-xl shadow-2xl py-2 min-w-[180px] opacity-0 pointer-events-none transition-opacity duration-200"
+        style="display: none;">
+        <button id="contextEditPlaylist"
+            class="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3">
+            <span class="material-symbols-rounded text-white/60">edit</span>
+            <span data-i18n="contextMenu.edit">Edit</span>
+        </button>
+        <button id="contextSharePlaylist"
+            class="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3">
+            <span class="material-symbols-rounded text-white/60">share</span>
+            <span data-i18n="playlist.sharePlaylist">Share Playlist</span>
+        </button>
+        <button id="contextExportPlaylist"
+            class="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3">
+            <span class="material-symbols-rounded text-white/60">download</span>
+            <span data-i18n="playlist.export">Export</span>
+        </button>
+        <button id="contextDownloadOffline"
+            class="w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3">
+            <span class="material-symbols-rounded text-white/60">android_wifi_3_bar_off</span>
+            <span data-i18n="playlist.downloadOffline">Download Offline</span>
+        </button>
+        <div class="h-px bg-white/10 my-2"></div>
+        <button id="contextDeletePlaylist"
+            class="w-full px-4 py-3 text-left text-red-400 hover:bg-red-500/10 transition-colors flex items-center gap-3">
+            <span class="material-symbols-rounded text-red-400">delete</span>
+            <span data-i18n="contextMenu.delete">Delete</span>
+        </button>
+    </div>
+
+    <div id="editPlaylistModal"
+        class="fixed inset-0 z-[80] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80" id="editPlaylistBackdrop"></div>
+        <div
+            class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-sm mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
+            <h3 class="text-xl font-bold text-white mb-4" data-i18n="playlist.editPlaylist">Edit Playlist</h3>
+
+            <div class="flex flex-col gap-3 mb-4">
+                <div class="h-full aspect-square flex-shrink-0">
+                    <div id="editPlaylistCoverPreview"
+                        class="relative h-full w-full rounded-xl overflow-hidden cursor-pointer group bg-white/10">
+                        <img id="editPlaylistCoverImg" src="" alt="Cover" data-i18n-attr="alt"
+                            data-i18n="playlist.coverImage" class="w-full h-full object-cover hidden">
+                        <div id="editPlaylistCoverPlaceholder"
+                            class="absolute inset-0 flex flex-col items-center justify-center text-white/40">
+                            <span class="material-symbols-rounded !text-3xl">image</span>
+                        </div>
+                        <div
+                            class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="material-symbols-rounded text-white !text-2xl">edit</span>
+                        </div>
+                    </div>
+                    <input type="file" id="editPlaylistCoverInput" accept="image/*" class="hidden">
+                </div>
+
+                <div class="flex flex-col gap-2 justify-between flex-grow">
+                    <input type="text" id="editPlaylistNameInput" placeholder="Playlist name..."
+                        data-i18n-placeholder="playlist.playlistNamePlaceholder"
+                        class="w-full h-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
+                    <input type="hidden" id="editPlaylistId">
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button id="cancelEditPlaylist"
+                    class="flex-1 py-3 px-4 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all"
+                    data-i18n="playlist.cancel">Cancel</button>
+                <button id="confirmEditPlaylist"
+                    class="flex-1 py-3 px-4 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all"
+                    data-i18n="playlist.save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editSongModal"
+        class="fixed inset-0 z-[80] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80" id="editSongBackdrop"></div>
+        <div
+            class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
+            <h3 class="text-xl font-bold text-white mb-4" data-i18n="song.editSong">Edit Song</h3>
+
+            <div class="flex items-stretch gap-2 h-[105px] mb-4">
+                <div class="h-full aspect-square flex-shrink-0">
+                    <div id="editSongCoverPreview"
+                        class="relative h-full w-full rounded-xl overflow-hidden cursor-pointer group">
+                        <img id="editSongCoverImg" src="" alt="Cover" data-i18n-attr="alt" data-i18n="song.coverImage"
+                            class="w-full h-full object-cover">
+                        <div
+                            class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="material-symbols-rounded text-white !text-3xl">edit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-3 justify-between flex-grow">
+                    <input type="text" id="editSongTitleInput" placeholder="Song name..."
+                        data-i18n-placeholder="song.songNamePlaceholder"
+                        class="w-full h-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
+                    <input type="text" id="editSongArtistInput" placeholder="Artist name..."
+                        data-i18n-placeholder="song.artistNamePlaceholder"
+                        class="w-full h-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
+                    <input type="hidden" id="editSongId">
+                </div>
+            </div>
+
+            <div class="flex gap-3">
+                <button id="cancelEditSong"
+                    class="flex-1 py-3 px-4 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all"
+                    data-i18n="playlist.cancel">Cancel</button>
+                <button id="confirmEditSong"
+                    class="flex-1 py-3 px-4 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all"
+                    data-i18n="playlist.save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="uploadSongsModal"
+        class="fixed inset-0 z-[80] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80" id="uploadSongsBackdrop"></div>
+        <div
+            class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-2xl mx-4 shadow-2xl transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="material-symbols-rounded text-[var(--primary-color)]">library_add</span>
+                    <span data-i18n="upload.addSong">Add Song</span>
+                </h3>
+                <button id="closeUploadModal" class="p-2 hover:bg-white/10 rounded-full transition-all">
+                    <span class="material-symbols-rounded text-white">close</span>
+                </button>
+            </div>
+
+            <div class="space-y-4 overflow-x-auto">
+                <div class="flex gap-2 border-b border-white/10 pb-4">
+                    <button id="uploadFileTab"
+                        class="flex-1 py-2 px-4 bg-[var(--primary-color)] text-white rounded-lg transition-all text-sm"
+                        data-i18n="upload.fromFile">From File
+                    </button>
+                    <button id="uploadUrlTab"
+                        class="flex-1 py-2 px-4 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all text-sm"
+                        data-i18n="upload.fromUrl">From URL
+                    </button>
+                </div>
+            </div>
+
+            <div id="fileUploadSection">
+                <div class="border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-[var(--primary-color)] transition-all cursor-pointer"
+                    id="dropZone">
+                    <span class="material-symbols-rounded text-5xl text-white/40 mb-3">folder_open</span>
+                    <p class="text-white/70 mb-2" data-i18n="upload.dragFiles">Drag files here or click</p>
+                    <p class="text-white/40 text-sm" data-i18n="upload.supportedFormats">MP3, M4A, WAV, OGG supported
+                    </p>
+                    <input type="file" id="fileInput" multiple accept="audio/*" class="hidden">
+                </div>
+            </div>
+
+            <div id="urlUploadSection" class="hidden">
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-white/70 text-sm mb-1 block" data-i18n="upload.songUrl">Song URL</label>
+                        <input type="url" id="songUrlInput" placeholder="https://example.com/song.mp3"
+                            class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
+                    </div>
+
+                    <div class="flex items-stretch gap-2 h-[105px]">
+                        <div id="urlCoverPreview" class="h-full aspect-square flex-shrink-0">
+                            <div class="relative h-full w-full rounded-xl overflow-hidden cursor-pointer group"
+                                onclick="userLibrary.triggerCustomCoverSelect()">
+                                <img id="urlCoverImage" src="./resources/MelechCover.png"
+                                    class="w-full h-full object-cover">
+                                <div
+                                    class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <span class="material-symbols-rounded text-white text-2xl">photo_camera</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="urlMetadataFields" class="flex flex-col gap-3 justify-between flex-grow">
+                            <input type="text" id="urlSongTitle" placeholder="Song Name"
+                                data-i18n-placeholder="upload.songNamePlaceholder"
+                                class="w-full h-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
+
+                            <input type="text" id="urlSongArtist" placeholder="Artist Name"
+                                data-i18n-placeholder="upload.artistNamePlaceholder"
+                                class="w-full h-full px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
+                        </div>
+                    </div>
+
+                    <button id="addUrlSongBtn"
+                        class="w-full py-3 px-4 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all"
+                        data-i18n="upload.add">
+                        Add
+                    </button>
+                </div>
+            </div>
+
+            <div id="uploadPreview" class="hidden mt-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-white font-medium flex items-center gap-2">
+                        <span class="material-symbols-rounded text-[var(--primary-color)]">playlist_add</span>
+                        <span data-i18n="upload.songsToUpload">Songs to Upload</span>
+                        <span id="pendingCount" class="text-sm text-white/60">(0)</span>
+                    </h4>
+                </div>
+                <div id="uploadPreviewList" class="space-y-2 max-h-[300px] overflow-y-auto">
+
+                </div>
+                <div class="flex gap-3 mt-4 pt-4 border-t border-white/10">
+                    <button id="cancelUpload"
+                        class="flex-1 py-3 px-4 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all"
+                        data-i18n="upload.cancel">Cancel</button>
+                    <button id="confirmUpload"
+                        class="flex-1 py-3 px-4 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all"
+                        data-i18n="upload.upload">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsModal"
+        class="fixed inset-0 z-[85] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80" id="settingsBackdrop"></div>
+        <div
+            class="relative bg-[#0D0204] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform scale-95 transition-transform duration-300 max-h-[85vh] overflow-y-auto border border-white/10">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="material-symbols-rounded text-[var(--primary-color)]">settings</span>
+                    <span data-i18n="settings.title">Settings</span>
+                </h3>
+                <button id="closeSettingsBtn" class="p-2 hover:bg-white/10 rounded-full transition-all">
+                    <span class="material-symbols-rounded text-white">close</span>
+                </button>
+            </div>
+
+            <div class="space-y-6">
+
+                <div class="bg-white/5 rounded-xl p-4">
+                    <label class="text-white/70 text-sm mb-2 block" data-i18n="settings.username">Username</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="usernameInput" placeholder="Your name..."
+                            data-i18n-placeholder="settings.usernamePlaceholder"
+                            class="w-full h-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/40 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus:border-[var(--primary-color)] transition-colors">
+                        <button id="saveUsernameBtn"
+                            class="px-4 py-2 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all">
+                            <span class="material-symbols-rounded">save</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white/5 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="material-symbols-rounded text-[var(--primary-color)]">language</span>
+                        <span class="text-white font-medium" data-i18n="settings.language">Language</span>
+                    </div>
+
+                    <div class="relative" id="languageSelector">
+                        <button id="languageSelectBtn"
+                            class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white flex items-center justify-between hover:bg-white/15 transition-colors">
+                            <span id="currentLanguageLabel">Auto (System)</span>
+                            <span class="material-symbols-rounded text-white/60">expand_more</span>
+                        </button>
+                        <div id="languageDropdown"
+                            class="absolute top-full left-0 right-0 mt-2 bg-[#1a0a0f] border border-white/20 rounded-xl overflow-hidden opacity-0 pointer-events-none transition-all duration-200 z-50 shadow-2xl">
+                            <button
+                                class="language-option w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3"
+                                data-value="auto">
+                                <span class="material-symbols-rounded text-[var(--primary-color)]">auto_awesome</span>
+                                <span data-i18n="settings.languageAuto">Auto (System)</span>
+                            </button>
+                            <button
+                                class="language-option w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3"
+                                data-value="en">
+                                <span
+                                    class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">EN</span>
+                                <span>English</span>
+                            </button>
+                            <button
+                                class="language-option w-full px-4 py-3 text-left text-white hover:bg-white/10 transition-colors flex items-center gap-3"
+                                data-value="tr">
+                                <span
+                                    class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">TR</span>
+                                <span>Türkçe</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white/5 rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-rounded text-[var(--primary-color)]">transition_chop</span>
+                            <span class="text-white font-medium" data-i18n="settings.gaplessPlayback">Gapless
+                                Playback</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="gaplessPlaybackToggle" class="sr-only peer">
+                            <div
+                                class="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--primary-color)]">
+                            </div>
+                        </label>
+                    </div>
+                    <p class="text-white/50 text-xs mb-4" data-i18n="settings.gaplessPlaybackDescription">
+                        Seamless transition between songs with fade in/out.</p>
+
+                    <div id="fadeDurationContainer" class="opacity-50 pointer-events-none transition-opacity">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-white/70 text-sm" data-i18n="settings.fadeDuration">Fade Duration</span>
+                            <span id="fadeDurationValue" class="text-white/70 text-sm font-mono">4s</span>
+                        </div>
+                        <input type="range" id="fadeDurationSlider" min="2" max="12" value="4"
+                            class="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[var(--primary-color)]">
+                        <p class="text-white/50 text-xs mt-2" data-i18n="settings.fadeDurationDescription">
+                            Transition duration in seconds.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white/5 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="material-symbols-rounded text-[var(--primary-color)]">queue_music</span>
+                        <span class="text-white font-medium" data-i18n="settings.exploreLimit">Explore Song Limit</span>
+                    </div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-white/70 text-sm" data-i18n="settings.songCount">Song Count</span>
+                        <span id="exploreLimitValue" class="text-white/70 text-sm font-mono">30</span>
+                    </div>
+                    <input type="range" id="exploreLimitSlider" min="20" max="100" value="30"
+                        class="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[var(--primary-color)]">
+                    <p class="text-white/50 text-xs mt-2" data-i18n="settings.exploreLimitDescription">
+                        Number of songs to load in Explore tab.</p>
+                </div>
+
+                <div class="bg-white/5 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="material-symbols-rounded text-[var(--primary-color)]">sync</span>
+                        <span class="text-white font-medium" data-i18n="settings.dataTransfer">Data Transfer</span>
+                    </div>
+                    <p class="text-white/50 text-xs mb-4" data-i18n="settings.dataTransferDescription">
+                        Move or backup your library to another device.</p>
+                    <div class="flex gap-2">
+                        <button id="importLibraryBtn"
+                            class="flex-1 py-3 px-2 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all flex items-center justify-center gap-1 min-w-0 overflow-hidden">
+                            <span class="material-symbols-rounded !text-lg shrink-0">upload</span>
+                            <span data-i18n="playlist.import" class="whitespace-nowrap"
+                                style="font-size: clamp(10px, 3vw, 16px);">
+                                Import
+                            </span>
+                        </button>
+                        <button id="exportLibraryBtn"
+                            class="flex-1 py-3 px-2 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all flex items-center justify-center gap-1 min-w-0 overflow-hidden">
+                            <span class="material-symbols-rounded !text-lg shrink-0">download</span>
+                            <span data-i18n="playlist.export" class="whitespace-nowrap"
+                                style="font-size: clamp(10px, 3vw, 16px);">
+                                Export
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="lib/jsmediatags.min.js"></script>
+    <!---->
+    <script src="src/scripts/melechDB.js"></script>
+    <!---->
+    <script src="src/scripts/language.js"></script>
+    <!---->
+    <script src="src/scripts/toastNotifications.js"></script>
+    <!---->
+    <script src="src/scripts/api/sp-tp-api.js"></script>
+    <script src="src/scripts/api/official-api.js"></script>
+    <script src="src/scripts/api/melech-api-client.js"></script>
+    <script src="src/scripts/api/service/jukehost.js"></script>
+    <!---->
+    <script src="src/scripts/colorExtractor.js"></script>
+    <script src="src/main.js"></script>
+    <!---->
+    <script src="src/scripts/playlist.js"></script>
+    <script src="src/scripts/playlistShare.js"></script>
+    <script src="src/scripts/audioEngine.js"></script>
+    <script src="src/scripts/melechPlayer.js"></script>
+    <script src="src/scripts/mediaSession.js"></script>
+    <script src="src/scripts/radio/radio.js"></script>
+    <!---->
+    <script src="src/scripts/library.js"></script>
+    <script src="src/scripts/userLibrary.js"></script>
+    <!---->
+    <script src="src/scripts/exportImport.js"></script>
+    <!---->
+    <script src="src/scripts/faviconTheme.js"></script>
+
+    <script>
+        (function () {
+            const staticNavbarContainer = document.getElementById('staticNavbarContainer');
+            const fixedNavbarContainer = document.getElementById('fixedNavbarContainer');
+
+            let fixedNavbar = null;
+            let isFullyHidden = false;
+            let hasScrolled = false;
+
+            function getFixedNavbarHTML() {
+                return `
+                    <div class="navbar-fixed-wrapper fully-hidden no-transition" id="navbarFixedWrapper">
+                        <nav class="navbar-fixed" aria-label="Quick Access" data-i18n-aria="nav.menu">
+                            <div>
+                                <img src="resources/MelechLogoWhite.svg" class="navbar-logo" alt="Melech Logo">
+                            </div>
+                            <div class="flex items-center">
+                                <div class="nav-links mr-2">
+                                    <a href="#" id="fixedRadioBtn" class="flex items-center text-white">
+                                        <span class="material-symbols-rounded text-2xl" translate="no">radio</span>
+                                    </a>
+                                    <a class="donate-btn flex items-center text-white" id="donateBtn" href="https://buymeacoffee.com/xmer" target="_blank">
+                                        <span class="material-symbols-rounded text-2xl" translate="no">volunteer_activism</span>
+                                    </a>
+                                    <a href="about/" target="_blank" class="flex items-center text-white mr-2">
+                                        <span class="material-symbols-rounded text-2xl" translate="no">help</span>
+                                    </a>
+                                </div>
+                                <button id="fixedMenuControlBtn" aria-label="Open Menu" aria-expanded="false"
+                                    aria-controls="menuOverlay">
+                                    <span class="material-symbols-rounded text-white" translate="no">menu</span>
+                                </button>
+                                <button id="fixedPlaylistMenuBtn" aria-label="Playlists" data-i18n-aria="nav.playlists"
+                                    aria-expanded="false"
+                                    class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all">
+                                    <span class="material-symbols-rounded text-white" translate="no">queue_music</span>
+                                </button>
+                                <button id="fixedSettingsBtnMain" aria-label="Settings"
+                                class="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-all ml-2">
+                                <span class="material-symbols-rounded text-white" translate="no">settings</span>
+                            </button>
+                            </div>
+                        </nav>
+                        <div class="navbar-toggle-handle" id="navbarToggleHandle" title="Toggle Navbar">
+                            <span class="material-symbols-rounded" translate="no">expand_less</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function createFixedNavbar() {
+                if (fixedNavbar) return;
+
+                fixedNavbarContainer.innerHTML = getFixedNavbarHTML();
+                fixedNavbar = fixedNavbarContainer.querySelector('.navbar-fixed');
+
+                const wrapper = document.getElementById('navbarFixedWrapper');
+                if (wrapper) {
+                    wrapper.classList.add('no-transition');
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            wrapper.classList.remove('no-transition');
+                        });
+                    });
+                }
+
+                const radioBtn = document.getElementById('fixedRadioBtn');
+                const playlistBtn = document.getElementById('fixedPlaylistMenuBtn');
+                const menuBtn = document.getElementById('fixedMenuControlBtn');
+                const settingsBtn = document.getElementById('fixedSettingsBtnMain');
+                const toggleHandle = document.getElementById('navbarToggleHandle');
+
+                if (radioBtn) {
+                    radioBtn.addEventListener('click', function () {
+                        const originalBtn = document.getElementById('desktopRadioBtn');
+                        if (originalBtn) originalBtn.click();
+                    });
+                }
+
+                if (playlistBtn) {
+                    playlistBtn.addEventListener('click', function () {
+                        const originalBtn = document.getElementById('playlistMenuBtn');
+                        if (originalBtn) originalBtn.click();
+                    });
+                }
+
+                if (menuBtn) {
+                    menuBtn.addEventListener('click', function () {
+                        const originalBtn = document.getElementById('menuControlBtn');
+                        if (originalBtn) originalBtn.click();
+                    });
+                }
+
+                if (settingsBtn) {
+                    settingsBtn.addEventListener('click', function () {
+                        const originalBtn = document.getElementById('settingsBtnMain');
+                        if (originalBtn) originalBtn.click();
+                    });
+                }
+
+                if (toggleHandle) {
+                    toggleHandle.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleNavbar();
+                    });
+                }
+            }
+
+            function toggleNavbar() {
+                const wrapper = document.getElementById('navbarFixedWrapper');
+                if (!wrapper) return;
+
+                if (wrapper.classList.contains('fully-hidden')) {
+                    wrapper.classList.remove('fully-hidden');
+                    wrapper.classList.add('collapsed');
+                    isFullyHidden = false;
+                    return;
+                }
+
+                if (wrapper.classList.contains('collapsed')) {
+                    wrapper.classList.remove('collapsed');
+                    wrapper.classList.add('expanded');
+                } else {
+                    wrapper.classList.remove('expanded');
+                    wrapper.classList.add('collapsed');
+                }
+            }
+
+            function hideNavbarFully() {
+                const wrapper = document.getElementById('navbarFixedWrapper');
+                if (!wrapper || isFullyHidden) return;
+
+                wrapper.classList.remove('collapsed', 'expanded');
+                wrapper.classList.add('fully-hidden');
+                isFullyHidden = true;
+            }
+
+            function showNavbarFromHidden() {
+                const wrapper = document.getElementById('navbarFixedWrapper');
+                if (!wrapper || !isFullyHidden) return;
+
+                wrapper.classList.remove('fully-hidden');
+                wrapper.classList.add('collapsed');
+                isFullyHidden = false;
+            }
+
+            createFixedNavbar();
+
+            let scrollThreshold = 100;
+            let lastScrollY = window.scrollY;
+
+            function onFirstScroll() {
+                if (hasScrolled) return;
+
+                const currentScrollY = window.scrollY;
+                const scrollDelta = Math.abs(currentScrollY - lastScrollY);
+
+                if (scrollDelta < scrollThreshold) return;
+
+                hasScrolled = true;
+
+                const wrapper = document.getElementById('navbarFixedWrapper');
+                if (wrapper && wrapper.classList.contains('fully-hidden')) {
+                    wrapper.classList.remove('no-transition');
+                    wrapper.classList.remove('fully-hidden');
+                    wrapper.classList.add('collapsed');
+                }
+
+                window.removeEventListener('scroll', onFirstScroll);
+            }
+
+            window.addEventListener('scroll', onFirstScroll, { passive: true });
+
+            if (staticNavbarContainer) {
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    const entry = entries[0];
+
+                    if (entry.isIntersecting) {
+                        hideNavbarFully();
+                    } else {
+                        showNavbarFromHidden();
+                    }
+                }, observerOptions);
+
+                observer.observe(staticNavbarContainer);
+            }
+        })();
+    </script>
+
+    <div id="radioStationModal"
+        class="fixed inset-0 z-[80] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80" id="radioStationBackdrop"></div>
+        <div
+            class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl max-h-[80vh] flex flex-col transform scale-95 transition-transform duration-300">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <span class="material-symbols-rounded text-[var(--primary-color)]">radio</span>
+                <span data-i18n="nav.radio">Radio</span>
+            </h3>
+            <div id="radioStationList" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar mb-4">
+            </div>
+            <button id="cancelRadioStation"
+                class="w-full py-3 px-4 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all"
+                data-i18n="playlist.cancel">Cancel</button>
+        </div>
+    </div>
+
+
+    <div id="confirmModal"
+        class="fixed inset-0 z-[90] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/80" id="confirmModalBackdrop"></div>
+        <div
+            class="relative bg-[#1a0a0f] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 rounded-full bg-[var(--primary-color)]/20 flex items-center justify-center">
+                    <span class="material-symbols-rounded text-[var(--primary-color)]">help</span>
+                </div>
+                <div>
+                    <h3 id="confirmModalTitle" class="text-xl font-bold text-white" data-i18n="common.confirm">Confirm
+                    </h3>
+                    <p id="confirmModalMessage" class="text-white/70 text-sm mt-1">Are you sure?</p>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button id="confirmModalCancel"
+                    class="flex-1 py-3 px-4 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all"
+                    data-i18n="playlist.cancel">Cancel</button>
+                <button id="confirmModalConfirm"
+                    class="flex-1 py-3 px-4 bg-[var(--primary-color)] hover:bg-[var(--secondary-color)] text-white rounded-xl transition-all"
+                    data-i18n="playlist.confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
