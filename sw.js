@@ -1,4 +1,4 @@
-const CACHE_NAME = "melech-v1";
+const CACHE_NAME = "melech-v3";
 const ASSETS = [
   "./",
   "./index.html",
@@ -78,9 +78,22 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) {
+        fetch(request)
+          .then((response) => {
+            if (response && response.status === 200) {
+              caches.open(CACHE_NAME).then((cache) => {
+                cache.put(request, response.clone());
+              });
+            }
+          })
+          .catch(() => {});
         return cached;
       }
 

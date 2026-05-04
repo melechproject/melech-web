@@ -6,11 +6,15 @@
 
   async function initRadio() {
     try {
-      const response = await fetch("./radio-lib/radio-lib.json");
+      const basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
+      const response = await fetch(`${basePath}radio-lib/radio-lib.json`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       stations = await response.json();
       renderStationList();
       setupEventListeners();
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error("[Radio] Failed to load stations:", err);
+    }
   }
 
   function setupEventListeners() {
@@ -99,7 +103,7 @@
       id: "radio-" + station.name.toLowerCase().replace(/\s+/g, "-"),
       title: station.name,
       artist: window.t ? window.t("radio.live") : "LIVE",
-      image: "radio-lib/data/images/RadioCover.png",
+      image: "./radio-lib/data/images/RadioCover.png",
       audio: station.streamUrl,
       source: "radio",
       isLive: true,
@@ -177,7 +181,7 @@
 
     const sidePlayerImage = document.getElementById("sidePlayerImage");
     if (sidePlayerImage) {
-      sidePlayerImage.src = "radio-lib/data/images/RadioCover.png";
+      sidePlayerImage.src = "./radio-lib/data/images/RadioCover.png";
     }
 
     if ("mediaSession" in navigator) {
@@ -187,7 +191,7 @@
         album: "Radio",
         artwork: [
           {
-            src: "radio-lib/data/images/RadioCover.png",
+            src: "./radio-lib/data/images/RadioCover.png",
             sizes: "512x512",
             type: "image/png",
           },

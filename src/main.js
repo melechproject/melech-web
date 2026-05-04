@@ -1,4 +1,9 @@
 window.addEventListener("DOMContentLoaded", async () => {
+  // Initialize Jukehost integration for URL token processing
+  if (window.jukehostIntegration) {
+    window.jukehostIntegration.init();
+  }
+
   let userSettings = { username: "User" };
 
   if (window.melechDB) {
@@ -338,6 +343,18 @@ window.addEventListener("DOMContentLoaded", async () => {
 
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
-    .register("./sw.js")
-    .catch((err) => console.error("SW", err));
+    .register("./sw.js", { scope: "./" })
+    .then((reg) => {
+      console.log("SW registered:", reg.scope);
+      reg.addEventListener("updatefound", () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener("statechange", () => {
+          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+            console.log("New SW available, reloading...");
+            window.location.reload();
+          }
+        });
+      });
+    })
+    .catch((err) => console.error("SW registration failed:", err));
 }

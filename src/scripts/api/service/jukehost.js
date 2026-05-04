@@ -14,8 +14,9 @@ class JukehostIntegration {
   async loadPlaylistNames() {
     try {
       const currentLang = localStorage.getItem("melech-language") || "tr";
+      const basePath = window.location.pathname.replace(/\/[^/]*$/, '/');
       const response = await fetch(
-        `./language/playlist-names/${currentLang}.json`,
+        `${basePath}language/playlist-names/${currentLang}.json`,
       );
 
       if (response.ok) {
@@ -145,7 +146,7 @@ class JukehostIntegration {
     modal.innerHTML = `
             <div class="bg-[#1a0a0f] rounded-2xl p-6 max-w-sm max-h-[90vh] overflow-y-auto mx-4 text-center border border-white/10 transform transition-all duration-300 scale-95 shadow-2xl custom-scrollbar">
                 <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden border border-white/5 p-1">
-                    <img src="resources/JH-PartnerLogo.png" alt="JukeHost" class="w-full h-full object-contain rounded-full">
+                    <img src="./resources/JH-PartnerLogo.png" alt="JukeHost" class="w-full h-full object-contain rounded-full">
                 </div>
                 <h3 class="text-xl font-bold text-white" data-i18n="jukehost.choiceTitle">${t("jukehost.choiceTitle")}</h3>
                 <p class="text-white/60 text-sm mb-6" data-i18n="jukehost.choiceDescription">${t("jukehost.choiceDescription")}</p>
@@ -210,7 +211,7 @@ class JukehostIntegration {
     modal.innerHTML = `
             <div class="bg-[#1a0a0f] rounded-2xl p-6 md:p-8 max-w-sm max-h-[90vh] overflow-y-auto mx-4 text-center border border-white/10 transform transition-all duration-300 scale-95 shadow-2xl custom-scrollbar">
                 <div class="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden p-0.5">
-                    <img src="resources/JH-PartnerLogo.png" alt="JukeHost" class="w-full h-full object-contain rounded-full">
+                    <img src="./resources/JH-PartnerLogo.png" alt="JukeHost" class="w-full h-full object-contain rounded-full">
                 </div>
                 <h3 class="text-xl font-bold text-white" data-i18n="jukehost.qrTitle">${t("jukehost.qrTitle")}</h3>
                 <p class="text-white/60 text-sm mb-6" data-i18n="jukehost.qrDescription">${t("jukehost.qrDescription")}</p>
