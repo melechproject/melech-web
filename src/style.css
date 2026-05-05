@@ -120,11 +120,9 @@ input[type="search"]::-webkit-search-results-decoration {
   height: 100dvh;
   inset: 0;
   z-index: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(20, 0, 4, 0) 70%
-  );
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(20, 0, 4, 0) 70%);
   transition: background 1s ease;
   pointer-events: none;
 }
@@ -186,11 +184,9 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 #mobileMiniPlayer {
-  background: linear-gradient(
-    135deg,
-    rgba(128, 0, 32, 0.6) 0%,
-    rgba(20, 0, 4, 0.85) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(128, 0, 32, 0.6) 0%,
+      rgba(20, 0, 4, 0.85) 100%);
   box-shadow:
     0 8px 32px 0 rgba(0, 0, 0, 0.8),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
@@ -229,6 +225,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     opacity: 1;

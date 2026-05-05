@@ -79,7 +79,15 @@ class UserLibrary {
     }
 
     window.addEventListener("resize", () => {
+      const clearBtn = document.getElementById("clearSearch");
+      const hasText = this.songSearchInput.value.length > 0;
+      clearBtn.classList.add("hidden");
+      this.songSearchInput.classList.remove("pr-8");
       if (!this.isCompactSearchViewport()) {
+        if (hasText) {
+          clearBtn.classList.remove("hidden");
+          this.songSearchInput.classList.add("pr-8");
+        }
         this.closeMobileSearch();
       }
     });
@@ -142,9 +150,19 @@ class UserLibrary {
   toggleMobileSearch() {
     if (!this.isCompactSearchViewport()) return;
 
+    const clearBtn = document.getElementById("clearSearch");
     if (this.isMobileSearchOpen) {
+      clearBtn?.classList.add("hidden");
       this.closeMobileSearch();
     } else {
+      const hasText = this.songSearchInput.value.length > 0;
+      if (hasText) {
+        clearBtn.classList.remove("hidden");
+        this.songSearchInput.classList.add("pr-8");
+      } else {
+        clearBtn.classList.add("hidden");
+        this.songSearchInput.classList.remove("pr-8");
+      }
       this.openMobileSearch();
     }
   }
