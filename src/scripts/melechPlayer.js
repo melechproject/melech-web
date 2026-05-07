@@ -2133,8 +2133,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const activeAudio = window.primaryAudio || primaryAudio;
     const isSecondaryDuringCrossfade = isCrossfading && a === secondaryAudio;
+    const error = a.error;
 
-    if (a.error?.code === 4 || a.error?.code === 3) {
+    if (error && (error.code === 4 || error.code === 3 || error.code === 2)) {
+      const currentSrc = a.src;
+
+      if (currentSrc && currentSrc !== "" && !currentSrc.startsWith("blob:")) {
+        console.warn(`Error caught (Code: ${error.code}). Retrying with cache-bust...`);
+        const savedTime = a.currentTime;
+
+        const retryUrl = currentSrc.includes("?")
+          ? `${currentSrc}&retry=${Date.now()}`
+          : `${currentSrc}?retry=${Date.now()}`;
+
+        a.src = retryUrl;
+        a.load();
+
+        if (a === activeAudio && isPlaying) {
+          a.currentTime = savedTime;
+          a.play().catch(() => {
+            survivalKit.activate();
+          });
+        }
+        return;
+      }
+
       const trackToRecover = isSecondaryDuringCrossfade
         ? nextTrackPreloaded
         : currentTrack;
@@ -2507,4 +2530,30 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!currentTrack || isLiveTrack(currentTrack)) return;
     checkForTrackTransition();
   }, 1000);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      const activeAudio = window.primaryAudio || primaryAudio;
+
+      if (isPlaying && activeAudio && activeAudio.paused) {
+        if (optiAudioEngine && optiAudioEngine.ctx && optiAudioEngine.ctx.state === "suspended") {
+          optiAudioEngine.ctx.resume();
+        }
+
+        if (window.updateMediaSessionMetadata) {
+          window.updateMediaSessionMetadata();
+        }
+
+        activeAudio.play().catch(() => {
+          const oldSrc = activeAudio.src;
+          if (oldSrc && !oldSrc.startsWith("blob:")) {
+            activeAudio.src = oldSrc.includes("?")
+              ? `${oldSrc}&focus=${Date.now()}`
+              : `${oldSrc}?focus=${Date.now()}`;
+            activeAudio.load();
+          }
+        });
+      }
+    }
+  });
 });

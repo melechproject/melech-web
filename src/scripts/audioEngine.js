@@ -188,6 +188,49 @@ class OptiAudioEngine {
       typeof deactivate === "function" ? deactivate : null;
   }
 
+  _handleAudioError(channelId, event) {
+    const channel = this.channels[channelId];
+    const error = channel.element.error;
+
+    if (error) {
+      console.error(
+        `audioEngine: Channel ${channelId} error code ${error.code}:`,
+        error.message,
+      );
+
+      if (error.code === 4 || error.code === 2) {
+        console.log(`Engine Error: Channel ${channelId} lost focus. Recovering...`);
+        this._cleanupMemory(channel);
+
+        if (channelId !== "L" && this.nextTrackUrl) {
+          setTimeout(() => {
+            this._smartLoad(channel, this.nextTrackUrl);
+          }, 1000);
+        }
+
+        if (channelId === "L" && this.onStateChange) {
+          this.onStateChange({
+            type: "error",
+            channelId,
+            isLiveError: true,
+            error,
+            recovered: true,
+          });
+        }
+        return;
+      }
+
+      if (channelId === "L" && this.onStateChange) {
+        this.onStateChange({
+          type: "error",
+          channelId,
+          isLiveError: true,
+          error,
+        });
+      }
+    }
+  }
+
   _handleTimeUpdate(channelId) {
     if (channelId !== this.activeChannel || channelId === "L") return;
 
@@ -385,25 +428,6 @@ class OptiAudioEngine {
       channel.element.addEventListener("error", onError);
       channel.element.load();
     });
-  }
-
-  async _handleAudioError(channelId, event) {
-    const channel = this.channels[channelId];
-    const error = channel.element.error;
-    if (error) {
-      console.error(
-        `audioEngine: Channel ${channelId} error code ${error.code}:`,
-        error.message,
-      );
-      if (channelId === "L" && this.onStateChange) {
-        this.onStateChange({
-          type: "error",
-          channelId,
-          isLiveError: true,
-          error,
-        });
-      }
-    }
   }
 
   _cleanupMemory(channel) {
