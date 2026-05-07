@@ -36,8 +36,6 @@ class OptiAudioEngine {
     audioEl.crossOrigin = "anonymous";
     audioEl.preload = id === "L" ? "none" : "auto";
 
-    audioEl.ontimeupdate = () => this._handleTimeUpdate(id);
-    audioEl.onended = () => this._handleTrackEnd(id);
     audioEl.onerror = (e) => this._handleAudioError(id, e);
 
     return {
