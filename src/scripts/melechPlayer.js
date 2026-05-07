@@ -100,10 +100,12 @@ document.addEventListener("DOMContentLoaded", () => {
   let loadingTrackId = null;
 
   function syncSurvivalKitState() {
+    const isAudioActuallyPlaying = primaryAudio && !primaryAudio.paused;
     const shouldStayAwake =
       isPlaying &&
       (isCrossfading ||
         isLoading ||
+        isAudioActuallyPlaying ||
         (document.hidden && (isPrefetching || !!nextTrackPreloaded)));
 
     if (shouldStayAwake) {
@@ -694,6 +696,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.updateMediaSessionMetadata) {
       window.updateMediaSessionMetadata();
     }
+    if (window.updateMediaSessionPlaybackState) {
+      window.updateMediaSessionPlaybackState();
+    }
 
     if (window.updateMediaSessionActionHandlers) {
       window.updateMediaSessionActionHandlers();
@@ -709,6 +714,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updatePlayPauseButton();
     attachAudioEventListeners();
+
+    savePlaybackState().catch(() => {});
+
+    if (window.updateMediaSessionPlaybackState) {
+      window.updateMediaSessionPlaybackState();
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     await releaseWakeLock();
     syncSurvivalKitState();
@@ -957,8 +970,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  let startupProtectionTimer = null;
+
   async function playTrack(track, resumeFrom = 0, fromPlaylist = false) {
     if (!track) return;
+
+    if (startupProtectionTimer) {
+      clearTimeout(startupProtectionTimer);
+      startupProtectionTimer = null;
+    }
+
+    survivalKit.activate();
 
     await unlockAudioChannels();
 
@@ -1111,6 +1133,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (window.updateMediaSessionMetadata) {
       window.updateMediaSessionMetadata();
+    }
+    if (window.updateMediaSessionPlaybackState) {
+      window.updateMediaSessionPlaybackState();
     }
 
     if (!isSameTrack || audio.paused || audio.ended) {
@@ -1642,6 +1667,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    survivalKit.activate();
+
     if (isLiveTrack(currentTrack) && optiAudioEngine) {
       optiAudioEngine.stop();
     }
@@ -1688,6 +1715,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (window.updateMediaSessionActionHandlers) {
         window.updateMediaSessionActionHandlers();
       }
+
+      setTimeout(() => {
+        if (window.updateMediaSessionMetadata) {
+          window.updateMediaSessionMetadata();
+        }
+        if (window.updateMediaSessionPlaybackState) {
+          window.updateMediaSessionPlaybackState();
+        }
+        if (window.setupMediaSessionAudioListeners) {
+          window.setupMediaSessionAudioListeners();
+        }
+      }, 50);
     } else {
       isPlaying = false;
       updatePlayPauseButton();
@@ -1703,6 +1742,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function playPreviousTrack() {
+    survivalKit.activate();
+
     if (isLiveTrack(currentTrack) && optiAudioEngine) {
       optiAudioEngine.stop();
     }
@@ -1880,7 +1921,22 @@ document.addEventListener("DOMContentLoaded", () => {
       syncSurvivalKitState();
     } else {
       if (window.currentPlaylist && window.playlistManager) {
+        survivalKit.activate();
+        if (window.updateMediaSessionPlaybackState) {
+          window.updateMediaSessionPlaybackState();
+        }
+
         await playNextTrack(false);
+
+        setTimeout(() => {
+          if (window.updateMediaSessionMetadata) {
+            window.updateMediaSessionMetadata();
+          }
+          if (window.setupMediaSessionAudioListeners) {
+            window.setupMediaSessionAudioListeners();
+          }
+          syncSurvivalKitState();
+        }, 100);
       } else {
         isPlaying = false;
         updatePlayPauseButton();
@@ -1961,7 +2017,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const activeAudio = window.primaryAudio || primaryAudio;
     if (a !== activeAudio) return;
 
+    survivalKit.activate();
+
     if (currentTrack?.audioBlob instanceof Blob) {
+      setTimeout(() => syncSurvivalKitState(), 1000);
       return;
     }
 
@@ -2040,6 +2099,16 @@ document.addEventListener("DOMContentLoaded", () => {
       isPlaying = true;
       updatePlayPauseButton();
     }
+
+    survivalKit.activate();
+    if (startupProtectionTimer) {
+      clearTimeout(startupProtectionTimer);
+    }
+    startupProtectionTimer = setTimeout(() => {
+      startupProtectionTimer = null;
+      syncSurvivalKitState();
+    }, 2000);
+
     syncSurvivalKitState();
   }
 
@@ -2052,6 +2121,12 @@ document.addEventListener("DOMContentLoaded", () => {
       savePlaybackState().catch(() => {});
     }
     clearLoadingState();
+
+    survivalKit.activate();
+    setTimeout(() => {
+      syncSurvivalKitState();
+    }, 500);
+
     syncSurvivalKitState();
   }
 

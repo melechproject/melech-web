@@ -232,23 +232,47 @@
 
     const clean = (el) => {
       if (!el) return;
-      el.removeEventListener("play", updateMediaSessionPlaybackState);
-      el.removeEventListener("pause", updateMediaSessionPlaybackState);
+      el.removeEventListener("play", onPlayUpdate);
+      el.removeEventListener("pause", onPauseUpdate);
       el.removeEventListener("seeked", updateMediaSessionPlaybackState);
       el.removeEventListener("ratechange", updateMediaSessionPlaybackState);
       el.removeEventListener("playing", updateMediaSessionPlaybackState);
+      el.removeEventListener("ended", onEndedUpdate);
     };
 
     clean(primary);
     clean(secondary);
 
     if (primary) {
-      primary.addEventListener("play", updateMediaSessionPlaybackState);
-      primary.addEventListener("pause", updateMediaSessionPlaybackState);
+      primary.addEventListener("play", onPlayUpdate);
+      primary.addEventListener("pause", onPauseUpdate);
       primary.addEventListener("seeked", updateMediaSessionPlaybackState);
       primary.addEventListener("ratechange", updateMediaSessionPlaybackState);
       primary.addEventListener("playing", updateMediaSessionPlaybackState);
+      primary.addEventListener("ended", onEndedUpdate);
     }
+  }
+
+  function onPlayUpdate() {
+    if ("mediaSession" in navigator) {
+      navigator.mediaSession.playbackState = "playing";
+    }
+    updateMediaSessionPlaybackState();
+  }
+
+  function onPauseUpdate() {
+    if ("mediaSession" in navigator) {
+      const audio = window.primaryAudio;
+      navigator.mediaSession.playbackState =
+        audio && !audio.paused ? "playing" : "paused";
+    }
+    updateMediaSessionPlaybackState();
+  }
+
+  function onEndedUpdate() {
+    setTimeout(() => {
+      updateMediaSessionPlaybackState();
+    }, 50);
   }
 
   if (document.readyState === "loading") {

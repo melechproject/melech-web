@@ -271,6 +271,44 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  const clearCacheBtn = document.getElementById("clearCacheBtn");
+  clearCacheBtn?.addEventListener("click", async () => {
+    try {
+      if ("serviceWorker" in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const registration of registrations) {
+          await registration.unregister();
+        }
+      }
+
+      const cacheNames = await caches.keys();
+      await Promise.all(cacheNames.map((name) => caches.delete(name)));
+
+      if (window.showToast) {
+        window.showToast(
+          window.t?.("settings.cacheClearSuccess") ||
+            "Cache cleared successfully, Refresh to get updates.",
+          "success",
+          3000,
+        );
+      }
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (err) {
+      console.error("Cache clear failed:", err);
+      if (window.showToast) {
+        window.showToast(
+          window.t?.("settings.cacheClearError") ||
+            "Could not clear cache. Please refresh the page.",
+          "error",
+          3000,
+        );
+      }
+    }
+  });
+
   const menuControlBtn = document.getElementById("menuControlBtn");
   const menuCloseBtn = document.getElementById("menuCloseBtn");
   const menuOverlay = document.getElementById("menuOverlay");

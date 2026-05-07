@@ -186,7 +186,12 @@
     "gaplessPlayback": "Kesintisiz Şarkı",
     "gaplessPlaybackDescription": "Şarkılar arasında kesintisiz geçiş ve sönme efekti.",
     "fadeDuration": "Geçiş Süresi",
-    "fadeDurationDescription": "Geçiş süresi saniye cinsinden."
+    "fadeDurationDescription": "Geçiş süresi saniye cinsinden.",
+    "cache": "Uygulama Önbelleği",
+    "cacheDescription": "Melech verilerini silmeden en son güncellemeleri almak için önbelleği temizleyin.",
+    "clearCache": "Önbelleği Temizle",
+    "cacheClearSuccess": "Önbellek başarıyla temizlendi, Güncellemeleri almak yenileyin.",
+    "cacheClearError": "Önbellek temizlenemedi. Lütfen sayfayı yenileyin."
   },
   "contextMenu": {
     "edit": "Düzenle",

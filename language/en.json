@@ -186,7 +186,12 @@
     "gaplessPlayback": "Gapless Playback",
     "gaplessPlaybackDescription": "Seamless transition between songs with fade in/out.",
     "fadeDuration": "Fade Duration",
-    "fadeDurationDescription": "Transition duration in seconds."
+    "fadeDurationDescription": "Transition duration in seconds.",
+    "cache": "App Cache",
+    "cacheDescription": "Clear cached files to get the latest updates without clearing Melech data.",
+    "clearCache": "Clear Cache",
+    "cacheClearSuccess": "Cache cleared successfully, Refresh to get updates.",
+    "cacheClearError": "Could not clear cache. Please refresh the page."
   },
   "contextMenu": {
     "edit": "Edit",
