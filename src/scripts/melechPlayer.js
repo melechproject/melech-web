@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     activate() {
       if (this.isActive) return;
-      this.audio.play().catch(() => {});
+      this.audio.play().catch(() => { });
       this.isActive = true;
     },
     deactivate() {
@@ -44,14 +44,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const playlistInfo = window.currentPlaylist
       ? {
-          playlistId: window.currentPlaylist.id,
-          playlistIndex: window.currentPlaylist.currentIndex,
-          isShuffle: window.playlistManager?.isShuffle || false,
-          shuffledIndices: window.currentPlaylist.shuffledIndices || [],
-          shufflePointer: window.currentPlaylist.shufflePointer || 0,
-          shuffledTrackIds:
-            window.playlistManager?.shuffledTrackOrder?.map((t) => t.id) || [],
-        }
+        playlistId: window.currentPlaylist.id,
+        playlistIndex: window.currentPlaylist.currentIndex,
+        isShuffle: window.playlistManager?.isShuffle || false,
+        shuffledIndices: window.currentPlaylist.shuffledIndices || [],
+        shufflePointer: window.currentPlaylist.shufflePointer || 0,
+        shuffledTrackIds:
+          window.playlistManager?.shuffledTrackOrder?.map((t) => t.id) || [],
+      }
       : null;
 
     const isActuallyLive =
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function setPlayerCrossfadeDuration(duration) {
     setFadeDuration(duration);
     if (window.melechDB) {
-      window.melechDB.setSetting("fadeDuration", fadeDuration).catch(() => {});
+      window.melechDB.setSetting("fadeDuration", fadeDuration).catch(() => { });
     }
     return fadeDuration;
   }
@@ -407,7 +407,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return (
           playlist.tracks?.find((t) => t.id === trackId) ||
           manager.playlists.find((p) => p.id === playlist.id)?.tracks?.[
-            nextIndex
+          nextIndex
           ]
         );
       } else if (loopMode === 1 && trackCount > 0) {
@@ -739,7 +739,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updatePlayPauseButton();
     attachAudioEventListeners();
 
-    savePlaybackState().catch(() => {});
+    savePlaybackState().catch(() => { });
 
     if (window.updateMediaSessionPlaybackState) {
       window.updateMediaSessionPlaybackState();
@@ -941,7 +941,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((color) => {
           coverBg.style.background = `linear-gradient(180deg, ${color} 0%, rgba(20, 0, 4, 0) 80%)`;
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }
 
@@ -997,6 +997,10 @@ document.addEventListener("DOMContentLoaded", () => {
   async function playTrack(track, resumeFrom = 0, fromPlaylist = false) {
     if (!track) return;
 
+    if ('mediaSession' in navigator && navigator.mediaSession.playbackState === "none") {
+      navigator.mediaSession.playbackState = "paused";
+    }
+
     survivalKit.activate();
 
     await unlockAudioChannels();
@@ -1004,7 +1008,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const isSameTrack = currentTrack && currentTrack.id === track.id;
 
     if (currentTrack && !isSameTrack) {
-      savePlaybackState().catch(() => {});
+      savePlaybackState().catch(() => { });
     }
 
     if (isLiveTrack(track) && !isSameTrack) {
@@ -1082,7 +1086,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (window.showToast) {
           window.showToast(
             window.t?.("player.loadError") ||
-              "Failed to load live stream. Please check your connection.",
+            "Failed to load live stream. Please check your connection.",
             "error",
             3000,
           );
@@ -1101,7 +1105,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       updateNavigationButtons();
-      savePlaybackState().catch(() => {});
+      savePlaybackState().catch(() => { });
       return;
     }
 
@@ -1128,7 +1132,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (window.showToast) {
         window.showToast(
           window.t?.("player.loadError") ||
-            "Failed to load track. Please check your connection or try again.",
+          "Failed to load track. Please check your connection or try again.",
           "error",
           3000,
         );
@@ -1189,7 +1193,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (window.showToast) {
             window.showToast(
               window.t?.("player.interactionNeeded") ||
-                "Please interact with the page first to play audio.",
+              "Please interact with the page first to play audio.",
               "warning",
               3000,
             );
@@ -1201,7 +1205,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (window.showToast) {
             window.showToast(
               window.t?.("player.loadError") ||
-                "Failed to load track. Please check your connection.",
+              "Failed to load track. Please check your connection.",
               "error",
               3000,
             );
@@ -1210,7 +1214,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    savePlaybackState().catch(() => {});
+    savePlaybackState().catch(() => { });
   }
 
   async function restorePlaylistState(savedState) {
@@ -1502,7 +1506,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isPlaying = false;
         updatePlayPauseButton();
         syncSurvivalKitState();
-        savePlaybackState().catch(() => {});
+        savePlaybackState().catch(() => { });
       }
       return;
     }
@@ -1603,7 +1607,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateNavigationButtons();
     }
     if (window.melechDB) {
-      window.melechDB.setSetting("shuffleEnabled", isShuffle).catch(() => {});
+      window.melechDB.setSetting("shuffleEnabled", isShuffle).catch(() => { });
     }
     if (currentTrack) updateNowPlayingUI(currentTrack);
   });
@@ -1621,7 +1625,7 @@ document.addEventListener("DOMContentLoaded", () => {
       loopIcon.textContent = "repeat_one";
     }
     if (window.melechDB) {
-      window.melechDB.setSetting("loopMode", loopMode).catch(() => {});
+      window.melechDB.setSetting("loopMode", loopMode).catch(() => { });
     }
     if (currentTrack) updateNowPlayingUI(currentTrack);
     updateNavigationButtons();
@@ -1700,7 +1704,7 @@ document.addEventListener("DOMContentLoaded", () => {
       nextTrackPreloaded = null;
     }
 
-    savePlaybackState().catch(() => {});
+    savePlaybackState().catch(() => { });
 
     if (window.currentPlaylist && window.playlistManager) {
       const hasNext = await window.playlistManager.playNextInPlaylist();
@@ -1773,7 +1777,7 @@ document.addEventListener("DOMContentLoaded", () => {
       nextTrackPreloaded = null;
     }
 
-    savePlaybackState().catch(() => {});
+    savePlaybackState().catch(() => { });
 
     if (window.currentPlaylist && window.playlistManager) {
       const hasPrev = await window.playlistManager.playPreviousInPlaylist();
@@ -1933,6 +1937,9 @@ document.addEventListener("DOMContentLoaded", () => {
       syncSurvivalKitState();
     } else {
       if (window.currentPlaylist && window.playlistManager) {
+        if ('mediaSession' in navigator && navigator.mediaSession.playbackState !== "playing") {
+          navigator.mediaSession.playbackState = "playing";
+        }
         await playNextTrack(false);
       } else {
         isPlaying = false;
@@ -2092,6 +2099,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const activeAudio = window.primaryAudio || primaryAudio;
     if (a !== activeAudio) return;
     clearLoadingState();
+
+    if ('mediaSession' in navigator && window.updateMediaSessionMetadata) {
+      setTimeout(() => {
+        window.updateMediaSessionMetadata();
+        navigator.mediaSession.playbackState = "playing";
+      }, 150);
+    }
+
     if (!isPlaying) {
       isPlaying = true;
       updatePlayPauseButton();
@@ -2107,7 +2122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isPlaying && !a.ended) {
       isPlaying = false;
       updatePlayPauseButton();
-      savePlaybackState().catch(() => {});
+      savePlaybackState().catch(() => { });
     }
     clearLoadingState();
     syncSurvivalKitState();
@@ -2136,7 +2151,7 @@ document.addEventListener("DOMContentLoaded", () => {
           .then(() => {
             survivalKit.activate();
           })
-          .catch(() => {});
+          .catch(() => { });
         return;
       }
     }
@@ -2207,7 +2222,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (window.showToast) {
               window.showToast(
                 window.t?.("player.offlinePlayError") ||
-                  "Failed to play offline track.",
+                "Failed to play offline track.",
                 "error",
                 3000,
               );
@@ -2227,7 +2242,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.addEventListener("beforeunload", () => {
-    savePlaybackState().catch(() => {});
+    savePlaybackState().catch(() => { });
   });
 
   window.addEventListener("playTrack", async (e) => {
@@ -2327,7 +2342,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateVolumeIcon(val);
 
       if (window.melechDB) {
-        window.melechDB.setSetting("volume", val).catch(() => {});
+        window.melechDB.setSetting("volume", val).catch(() => { });
       }
     });
   });
@@ -2348,7 +2363,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       updateVolumeIcon(0);
       if (window.melechDB) {
-        window.melechDB.setSetting("volume", 0).catch(() => {});
+        window.melechDB.setSetting("volume", 0).catch(() => { });
       }
       if (crossfading && window.primaryAudio && window.secondaryAudio) {
         window.primaryAudio.volume = 0;
@@ -2363,7 +2378,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       updateVolumeIcon(lastVolume);
       if (window.melechDB) {
-        window.melechDB.setSetting("volume", lastVolume).catch(() => {});
+        window.melechDB.setSetting("volume", lastVolume).catch(() => { });
       }
       if (crossfading && window.primaryAudio && window.secondaryAudio) {
         window.primaryAudio.volume = lastVolume / 100;
