@@ -1097,6 +1097,64 @@
 
     <script>
         (function () {
+            const versionUrl = "https://raw.githubusercontent.com/melechproject/melech-web/main/version?t=" + Date.now();
+            fetch(versionUrl)
+                .then(response => response.text())
+                .then(remoteVersion => {
+                    const lastVersion = remoteVersion.trim();
+                    const currentVersion = localStorage.getItem("appVersion");
+
+                    if (!currentVersion || currentVersion !== lastVersion) {
+                        localStorage.setItem("appVersion", lastVersion);
+                        clearCache();
+                    }
+                })
+                .catch(error => {
+                    console.error("Version check failed:", error);
+                });
+
+            const clearCacheBtn = document.getElementById("clearCacheBtn");
+            clearCacheBtn?.addEventListener("click", async () => {
+                await clearCache();
+            });
+
+            async function clearCache() {
+                try {
+                    if ("serviceWorker" in navigator) {
+                        const registrations = await navigator.serviceWorker.getRegistrations();
+                        for (const registration of registrations) {
+                            await registration.unregister();
+                        }
+                    }
+
+                    const cacheNames = await caches.keys();
+                    await Promise.all(cacheNames.map((name) => caches.delete(name)));
+
+                    if (window.showToast) {
+                        window.showToast(
+                            window.t?.("settings.cacheClearSuccess") ||
+                            "Cache cleared successfully, Refresh to get updates.",
+                            "success",
+                            3000,
+                        );
+                    }
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } catch (err) {
+                    console.error("Cache clear failed:", err);
+                    if (window.showToast) {
+                        window.showToast(
+                            window.t?.("settings.cacheClearError") ||
+                            "Could not clear cache. Please refresh the page.",
+                            "error",
+                            3000,
+                        );
+                    }
+                }
+            }
+
             const staticNavbarContainer = document.getElementById('staticNavbarContainer');
             const fixedNavbarContainer = document.getElementById('fixedNavbarContainer');
 
