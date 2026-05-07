@@ -79,7 +79,6 @@ class OptiAudioEngine {
       const onCanPlay = async () => {
         channel.element.removeEventListener("canplay", onCanPlay);
         channel.element.removeEventListener("error", onError);
-        this._deactivateKeepAlive();
         if (this.onStateChange)
           this.onStateChange({
             type: "loading",
@@ -90,14 +89,21 @@ class OptiAudioEngine {
 
         try {
           await channel.element.play();
-          resolve(true);
         } catch (e) {
+          this._deactivateKeepAlive();
           resolve(false);
         }
       };
 
+      const onPlaying = () => {
+        channel.element.removeEventListener("playing", onPlaying);
+        this._deactivateKeepAlive();
+        resolve(true);
+      };
+
       const onError = () => {
         channel.element.removeEventListener("canplay", onCanPlay);
+        channel.element.removeEventListener("playing", onPlaying);
         channel.element.removeEventListener("error", onError);
         this._deactivateKeepAlive();
         if (this.onStateChange) {
@@ -119,6 +125,7 @@ class OptiAudioEngine {
 
       channel.element.addEventListener("canplay", onCanPlay);
       channel.element.addEventListener("error", onError);
+      channel.element.addEventListener("playing", onPlaying);
       channel.element.load();
     });
   }
@@ -338,9 +345,13 @@ class OptiAudioEngine {
       const onCanPlay = () => {
         channel.element.removeEventListener("canplay", onCanPlay);
         channel.element.removeEventListener("error", onError);
-        this._deactivateKeepAlive();
         if (this.onStateChange)
           this.onStateChange({ type: "loading", status: false, url });
+      };
+
+      const onPlaying = () => {
+        channel.element.removeEventListener("playing", onPlaying);
+        this._deactivateKeepAlive();
         resolve(true);
       };
 
@@ -370,6 +381,7 @@ class OptiAudioEngine {
         }
 
         channel.element.removeEventListener("canplay", onCanPlay);
+        channel.element.removeEventListener("playing", onPlaying);
         channel.element.removeEventListener("error", onError);
         this._deactivateKeepAlive();
 
@@ -386,6 +398,7 @@ class OptiAudioEngine {
 
       channel.element.addEventListener("canplay", onCanPlay);
       channel.element.addEventListener("error", onError);
+      channel.element.addEventListener("playing", onPlaying);
       channel.element.load();
     });
   }
@@ -420,9 +433,14 @@ class OptiAudioEngine {
     }
 
     channel.element.pause();
-    channel.element.removeAttribute("src");
+    const wasPlaying = !channel.element.paused && channel.element.currentTime > 0;
+    if (!wasPlaying) {
+      channel.element.removeAttribute("src");
+    }
     channel.element.load();
-    channel.currentUrl = null;
+    if (!wasPlaying) {
+      channel.currentUrl = null;
+    }
   }
 
   cleanupAllBlobs() {

@@ -210,6 +210,25 @@
     }
   }
 
+  function setMediaSessionLoadingState(track) {
+    if (!("mediaSession" in navigator)) return;
+
+    const artworkUrl = track?.image ? getArtworkUrl(track.image) : DEFAULT_ARTWORK;
+    const title = track?.title ? `Loading: ${track.title}` : "Loading...";
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: title,
+      artist: track?.artist || "Please wait...",
+      album: track?.album || "Melech Player",
+      artwork: [
+        { src: artworkUrl, sizes: "192x192", type: "image/png" },
+        { src: artworkUrl, sizes: "512x512", type: "image/png" },
+      ],
+    });
+
+    navigator.mediaSession.playbackState = "playing";
+  }
+
   function clearMediaSessionPosition() {
     if (!("mediaSession" in navigator)) return;
     try {
@@ -290,4 +309,5 @@
   window.updateMediaSessionActionHandlers = updateMediaSessionActionHandlers;
   window.clearMediaSessionPosition = clearMediaSessionPosition;
   window.setupMediaSessionAudioListeners = setupAudioListeners;
+  window.setMediaSessionLoadingState = setMediaSessionLoadingState;
 })();
