@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  let gaplessMode = 'off';
   let isGaplessPlaybackEnabled = false;
   let fadeDuration = 4;
   let primaryAudio = null;
@@ -101,11 +102,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function syncSurvivalKitState() {
     const isAudioActuallyPlaying = primaryAudio && !primaryAudio.paused;
+    const isPlayingButStalled = isPlaying && !isAudioActuallyPlaying && !isLoading && !isCrossfading;
     const shouldStayAwake =
       isPlaying &&
       (isCrossfading ||
         isLoading ||
         isAudioActuallyPlaying ||
+        isPlayingButStalled ||
         (document.hidden && (isPrefetching || !!nextTrackPreloaded)));
 
     if (shouldStayAwake) {
@@ -157,10 +160,20 @@ document.addEventListener("DOMContentLoaded", () => {
   window.secondaryAudio = secondaryAudio;
 
   function initGaplessPlayback() {
-    if (!window.melechDB) return;
+    if (!window.melechDB) {
+      gaplessMode = 'preload';
+      isGaplessPlaybackEnabled = false;
+      return;
+    }
 
     window.melechDB.getSetting("gaplessPlayback", false).then((enabled) => {
-      isGaplessPlaybackEnabled = enabled;
+      if (enabled) {
+        gaplessMode = 'full';
+        isGaplessPlaybackEnabled = true;
+      } else {
+        gaplessMode = 'preload';
+        isGaplessPlaybackEnabled = false;
+      }
       if (optiAudioEngine) {
         optiAudioEngine.setGapless(enabled);
       }
@@ -172,12 +185,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setGaplessPlayback(enabled) {
-    isGaplessPlaybackEnabled = enabled;
+    if (enabled) {
+      gaplessMode = 'full';
+      isGaplessPlaybackEnabled = true;
+    } else {
+      gaplessMode = 'preload';
+      isGaplessPlaybackEnabled = false;
+    }
     if (optiAudioEngine) {
       optiAudioEngine.setGapless(enabled);
     }
     if (!enabled) {
       releaseWakeLock();
+    }
+  }
+
+  function setGaplessMode(mode) {
+    gaplessMode = mode;
+    isGaplessPlaybackEnabled = mode === 'full';
+    if (optiAudioEngine) {
+      optiAudioEngine.setGapless(mode === 'full');
     }
   }
 
@@ -246,7 +273,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.setGaplessPlayback = setGaplessPlayback;
+  window.setGaplessMode = setGaplessMode;
   window.setFadeDuration = setFadeDuration;
+  window.getGaplessMode = () => gaplessMode;
   window.player = window.player || {};
   window.player.setCrossfadeDuration = setPlayerCrossfadeDuration;
   window.player.getCrossfadeDuration = () => fadeDuration;
@@ -405,8 +434,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let isPrefetching = false;
 
   async function prefetchNextTrack() {
+    const allowPrefetch = gaplessMode === 'full' || gaplessMode === 'preload';
     if (
-      !isGaplessPlaybackEnabled ||
+      !allowPrefetch ||
       !isPlaying ||
       isCrossfading ||
       isPrefetching
@@ -476,8 +506,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function checkForTrackTransition() {
+    const allowPreload = gaplessMode === 'full' || gaplessMode === 'preload';
+    const allowCrossfade = gaplessMode === 'full';
+
     if (
-      !isGaplessPlaybackEnabled ||
+      !allowPreload ||
       !isPlaying ||
       loopMode === 0 ||
       !currentTrack ||
@@ -488,24 +521,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const remaining = primaryAudio.duration - primaryAudio.currentTime;
 
-    if (remaining < fadeDuration && remaining > 0.5 && !isCrossfading) {
-      if (!nextTrackPreloaded) {
-        prefetchNextTrack();
-      } else {
-        startCrossfade(remaining);
-        return;
-      }
-    }
-
+    const preloadThreshold = document.hidden ? 30 : 15;
     if (
-      remaining <= fadeDuration + 2 &&
+      remaining < preloadThreshold &&
       !nextTrackPreloaded &&
-      !isCrossfading
+      !isCrossfading &&
+      !isPrefetching
     ) {
       prefetchNextTrack();
     }
 
-    if (remaining <= fadeDuration && nextTrackPreloaded && !isCrossfading) {
+    if (allowCrossfade && remaining <= fadeDuration && nextTrackPreloaded && !isCrossfading) {
       startCrossfade();
     }
   }
@@ -1663,7 +1689,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   async function playNextTrack(isManual = true) {
-    if (!isManual && isGaplessPlaybackEnabled && isCrossfading) {
+    if (!isManual && gaplessMode === 'full' && isCrossfading) {
       return;
     }
 
@@ -1863,7 +1889,10 @@ document.addEventListener("DOMContentLoaded", () => {
         survivalKit.deactivate();
       }
 
-      if (isGaplessPlaybackEnabled) {
+      const allowPreload = gaplessMode === 'full' || gaplessMode === 'preload';
+      const allowCrossfade = gaplessMode === 'full';
+
+      if (allowPreload) {
         if (
           remaining < prefetchThreshold &&
           !nextTrackPreloaded &&
@@ -1872,7 +1901,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
           prefetchNextTrack();
         }
-        if (remaining <= fadeDuration && nextTrackPreloaded && !isCrossfading) {
+        if (allowCrossfade && remaining <= fadeDuration && nextTrackPreloaded && !isCrossfading) {
           startCrossfade();
         }
       }
@@ -1903,7 +1932,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updatePlayPauseButton();
       return;
     }
-    if (isGaplessPlaybackEnabled && isCrossfading) return;
+    if (gaplessMode === 'full' && isCrossfading) return;
 
     if (a.id === "secondaryAudio") {
       return;
@@ -2508,4 +2537,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   initGaplessPlayback();
+
+  gaplessCheckInterval = setInterval(() => {
+    if (!currentTrack || isLiveTrack(currentTrack)) return;
+    checkForTrackTransition();
+  }, 1000);
 });

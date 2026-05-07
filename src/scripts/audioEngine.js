@@ -272,7 +272,6 @@ class OptiAudioEngine {
 
     const channel = this.channels[channelId];
     if (
-      !this.isGapless &&
       channelId === this.activeChannel &&
       this.nextTrackUrl
     ) {
