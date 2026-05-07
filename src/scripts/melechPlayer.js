@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const survivalKit = {
     audio: null,
     isActive: false,
-    forceActive: false,
     init() {
       this.audio = new Audio(
         "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAAAB",
@@ -31,18 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
       this.isActive = true;
     },
     deactivate() {
-      if (this.forceActive) return;
       if (!this.isActive) return;
       this.audio.pause();
       this.isActive = false;
-    },
-    forceActivate() {
-      this.forceActive = true;
-      this.activate();
-    },
-    releaseForce() {
-      this.forceActive = false;
-      this.deactivate();
     },
   };
   survivalKit.init();
@@ -108,16 +98,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let isLoading = false;
   let loadingTrackId = null;
-  let isTransitioning = false;
 
   function syncSurvivalKitState() {
-    if (survivalKit.forceActive) return;
     const isAudioActuallyPlaying = primaryAudio && !primaryAudio.paused;
     const shouldStayAwake =
       isPlaying &&
       (isCrossfading ||
         isLoading ||
-        isTransitioning ||
         isAudioActuallyPlaying ||
         (document.hidden && (isPrefetching || !!nextTrackPreloaded)));
 
@@ -937,22 +924,14 @@ document.addEventListener("DOMContentLoaded", () => {
   let activeObjectUrls = [];
 
   function revokeOldObjectUrls() {
-    const protectedUrls = new Set();
-    if (primaryAudio?.src?.startsWith("blob:")) {
-      protectedUrls.add(primaryAudio.src);
-    }
-    if (secondaryAudio?.src?.startsWith("blob:")) {
-      protectedUrls.add(secondaryAudio.src);
-    }
     activeObjectUrls.forEach((url) => {
-      if (protectedUrls.has(url)) return;
       try {
         URL.revokeObjectURL(url);
       } catch (e) {
         console.error(e);
       }
     });
-    activeObjectUrls = activeObjectUrls.filter((url) => protectedUrls.has(url));
+    activeObjectUrls = [];
   }
 
   function getEngineChannelByAudioElement(audioEl) {
@@ -1001,19 +980,7 @@ document.addEventListener("DOMContentLoaded", () => {
       startupProtectionTimer = null;
     }
 
-    survivalKit.forceActivate();
-    isTransitioning = true;
-    isLoading = true;
-    loadingTrackId = track.id;
-    window.dispatchEvent(
-      new CustomEvent("trackLoading", {
-        detail: { trackId: track.id, isLoading: true },
-      }),
-    );
-
-    if (window.setMediaSessionLoadingState) {
-      window.setMediaSessionLoadingState(track);
-    }
+    survivalKit.activate();
 
     await unlockAudioChannels();
 
@@ -1171,10 +1138,16 @@ document.addEventListener("DOMContentLoaded", () => {
       window.updateMediaSessionPlaybackState();
     }
 
-    if (isSameTrack && !audio.paused && !audio.ended) {
+    if (!isSameTrack || audio.paused || audio.ended) {
+      isLoading = true;
+      loadingTrackId = track.id;
+      window.dispatchEvent(
+        new CustomEvent("trackLoading", {
+          detail: { trackId: track.id, isLoading: true },
+        }),
+      );
+    } else {
       clearLoadingState();
-      isTransitioning = false;
-      survivalKit.releaseForce();
     }
 
     updateNavigationButtons();
@@ -1694,8 +1667,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    survivalKit.forceActivate();
-    isTransitioning = true;
+    survivalKit.activate();
 
     if (isLiveTrack(currentTrack) && optiAudioEngine) {
       optiAudioEngine.stop();
@@ -1949,21 +1921,22 @@ document.addEventListener("DOMContentLoaded", () => {
       syncSurvivalKitState();
     } else {
       if (window.currentPlaylist && window.playlistManager) {
-        survivalKit.forceActivate();
-        isTransitioning = true;
+        survivalKit.activate();
         if (window.updateMediaSessionPlaybackState) {
           window.updateMediaSessionPlaybackState();
         }
 
         await playNextTrack(false);
 
-        if (window.updateMediaSessionMetadata) {
-          window.updateMediaSessionMetadata();
-        }
-        if (window.setupMediaSessionAudioListeners) {
-          window.setupMediaSessionAudioListeners();
-        }
-        syncSurvivalKitState();
+        setTimeout(() => {
+          if (window.updateMediaSessionMetadata) {
+            window.updateMediaSessionMetadata();
+          }
+          if (window.setupMediaSessionAudioListeners) {
+            window.setupMediaSessionAudioListeners();
+          }
+          syncSurvivalKitState();
+        }, 100);
       } else {
         isPlaying = false;
         updatePlayPauseButton();
@@ -2118,19 +2091,10 @@ document.addEventListener("DOMContentLoaded", () => {
     syncSurvivalKitState();
   }
 
-  function clearTransitionState() {
-    isTransitioning = false;
-    survivalKit.releaseForce();
-    syncSurvivalKitState();
-  }
-
   function handlePlaying(a) {
     const activeAudio = window.primaryAudio || primaryAudio;
     if (a !== activeAudio) return;
     clearLoadingState();
-    if (isTransitioning) {
-      clearTransitionState();
-    }
     if (!isPlaying) {
       isPlaying = true;
       updatePlayPauseButton();
@@ -2151,12 +2115,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function handlePause(a) {
     const activeAudio = window.primaryAudio || primaryAudio;
     if (a !== activeAudio) return;
-
-    if (isLoading || isTransitioning) {
-      survivalKit.activate();
-      return;
-    }
-
     if (isPlaying && !a.ended) {
       isPlaying = false;
       updatePlayPauseButton();

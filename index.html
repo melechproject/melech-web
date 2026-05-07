@@ -1100,20 +1100,13 @@
             const versionUrl = "https://raw.githubusercontent.com/melechproject/melech-web/main/version?t=" + Date.now();
             fetch(versionUrl)
                 .then(response => response.text())
-                .then(async remoteVersion => {
+                .then(remoteVersion => {
                     const lastVersion = remoteVersion.trim();
                     const currentVersion = localStorage.getItem("appVersion");
 
                     if (!currentVersion || currentVersion !== lastVersion) {
-                        const registrations = await navigator.serviceWorker.getRegistrations();
-                        const hasServiceWorker = registrations.length > 0;
-
-                        if (hasServiceWorker) {
-                            localStorage.setItem("appVersion", lastVersion);
-                            await clearCache();
-                        } else {
-                            localStorage.setItem("appVersion", lastVersion);
-                        }
+                        localStorage.setItem("appVersion", lastVersion);
+                        clearCache();
                     }
                 })
                 .catch(error => {
@@ -1354,11 +1347,6 @@
                 observer.observe(staticNavbarContainer);
             }
         })();
-    </script>
-
-    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
-    <script>
-        var vConsole = new window.VConsole();
     </script>
 
     <div id="radioStationModal"
