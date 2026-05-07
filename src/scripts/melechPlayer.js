@@ -986,15 +986,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  let startupProtectionTimer = null;
-
   async function playTrack(track, resumeFrom = 0, fromPlaylist = false) {
     if (!track) return;
-
-    if (startupProtectionTimer) {
-      clearTimeout(startupProtectionTimer);
-      startupProtectionTimer = null;
-    }
 
     survivalKit.activate();
 
@@ -1732,17 +1725,15 @@ document.addEventListener("DOMContentLoaded", () => {
         window.updateMediaSessionActionHandlers();
       }
 
-      setTimeout(() => {
-        if (window.updateMediaSessionMetadata) {
-          window.updateMediaSessionMetadata();
-        }
-        if (window.updateMediaSessionPlaybackState) {
-          window.updateMediaSessionPlaybackState();
-        }
-        if (window.setupMediaSessionAudioListeners) {
-          window.setupMediaSessionAudioListeners();
-        }
-      }, 50);
+      if (window.updateMediaSessionMetadata) {
+        window.updateMediaSessionMetadata();
+      }
+      if (window.updateMediaSessionPlaybackState) {
+        window.updateMediaSessionPlaybackState();
+      }
+      if (window.setupMediaSessionAudioListeners) {
+        window.setupMediaSessionAudioListeners();
+      }
     } else {
       isPlaying = false;
       updatePlayPauseButton();
@@ -1934,22 +1925,7 @@ document.addEventListener("DOMContentLoaded", () => {
       syncSurvivalKitState();
     } else {
       if (window.currentPlaylist && window.playlistManager) {
-        survivalKit.activate();
-        if (window.updateMediaSessionPlaybackState) {
-          window.updateMediaSessionPlaybackState();
-        }
-
         await playNextTrack(false);
-
-        setTimeout(() => {
-          if (window.updateMediaSessionMetadata) {
-            window.updateMediaSessionMetadata();
-          }
-          if (window.setupMediaSessionAudioListeners) {
-            window.setupMediaSessionAudioListeners();
-          }
-          syncSurvivalKitState();
-        }, 100);
       } else {
         isPlaying = false;
         updatePlayPauseButton();
@@ -2033,7 +2009,7 @@ document.addEventListener("DOMContentLoaded", () => {
     survivalKit.activate();
 
     if (currentTrack?.audioBlob instanceof Blob) {
-      setTimeout(() => syncSurvivalKitState(), 1000);
+      syncSurvivalKitState();
       return;
     }
 
@@ -2114,14 +2090,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     survivalKit.activate();
-    if (startupProtectionTimer) {
-      clearTimeout(startupProtectionTimer);
-    }
-    startupProtectionTimer = setTimeout(() => {
-      startupProtectionTimer = null;
-      syncSurvivalKitState();
-    }, 2000);
-
     syncSurvivalKitState();
   }
 
@@ -2134,12 +2102,6 @@ document.addEventListener("DOMContentLoaded", () => {
       savePlaybackState().catch(() => {});
     }
     clearLoadingState();
-
-    survivalKit.activate();
-    setTimeout(() => {
-      syncSurvivalKitState();
-    }, 500);
-
     syncSurvivalKitState();
   }
 
@@ -2161,14 +2123,12 @@ document.addEventListener("DOMContentLoaded", () => {
         a.src = newUrl;
         a.load();
 
-        setTimeout(() => {
-          a.currentTime = savedTime;
-          a.play()
-            .then(() => {
-              survivalKit.activate();
-            })
-            .catch(() => {});
-        }, 250);
+        a.currentTime = savedTime;
+        a.play()
+          .then(() => {
+            survivalKit.activate();
+          })
+          .catch(() => {});
         return;
       }
     }
@@ -2226,28 +2186,26 @@ document.addEventListener("DOMContentLoaded", () => {
         activeObjectUrls.push(newUrl);
         a.src = newUrl;
 
-        setTimeout(() => {
-          a.play().catch((err) => {
-            console.error("Offline blob recovery play failed:", err);
-            if (a === activeAudio) {
-              isPlaying = false;
-              isLoading = false;
-              loadingTrackId = null;
-              updatePlayPauseButton();
-              syncSurvivalKitState();
-              clearLoadingState();
+        a.play().catch((err) => {
+          console.error("Offline blob recovery play failed:", err);
+          if (a === activeAudio) {
+            isPlaying = false;
+            isLoading = false;
+            loadingTrackId = null;
+            updatePlayPauseButton();
+            syncSurvivalKitState();
+            clearLoadingState();
 
-              if (window.showToast) {
-                window.showToast(
-                  window.t?.("player.offlinePlayError") ||
-                    "Failed to play offline track.",
-                  "error",
-                  3000,
-                );
-              }
+            if (window.showToast) {
+              window.showToast(
+                window.t?.("player.offlinePlayError") ||
+                  "Failed to play offline track.",
+                "error",
+                3000,
+              );
             }
-          });
-        }, 100);
+          }
+        });
         return;
       }
     }
