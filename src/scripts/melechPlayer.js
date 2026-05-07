@@ -101,17 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let loadingTrackId = null;
 
   function syncSurvivalKitState() {
-    const isAudioActuallyPlaying = primaryAudio && !primaryAudio.paused;
-    const isPlayingButStalled = isPlaying && !isAudioActuallyPlaying && !isLoading && !isCrossfading;
-    const shouldStayAwake =
-      isPlaying &&
-      (isCrossfading ||
-        isLoading ||
-        isAudioActuallyPlaying ||
-        isPlayingButStalled ||
-        (document.hidden && (isPrefetching || !!nextTrackPreloaded)));
-
-    if (shouldStayAwake) {
+    if (isPlaying) {
       survivalKit.activate();
     } else {
       survivalKit.deactivate();
@@ -1882,12 +1872,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isPlaying) {
       const remaining = a.duration - a.currentTime;
       const prefetchThreshold = document.hidden ? 30 : 15;
-
-      if (document.hidden && remaining < 35) {
-        survivalKit.activate();
-      } else if (!document.hidden || remaining > 40) {
-        survivalKit.deactivate();
-      }
 
       const allowPreload = gaplessMode === 'full' || gaplessMode === 'preload';
       const allowCrossfade = gaplessMode === 'full';
