@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let loadingTrackId = null;
 
   function syncSurvivalKitState() {
-    if (isPlaying) {
+    if (isPlaying || currentTrack) {
       survivalKit.activate();
     } else {
       survivalKit.deactivate();
@@ -619,6 +619,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     primaryAudio.id = "primaryAudio";
     secondaryAudio.id = "secondaryAudio";
+
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = null;
+      if (window.updateMediaSessionMetadata) {
+        window.updateMediaSessionMetadata();
+      }
+      navigator.mediaSession.playbackState = "playing";
+    }
 
     oldPrimary.pause();
     oldPrimary.volume = targetVolume;
