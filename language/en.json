@@ -92,7 +92,7 @@
     "createFirst": "Create a playlist first",
     "empty": "Playlist is empty",
     "importSongsSuccess": "Songs imported successfully.",
-    "importSuccess": "\"{{name}}\" playlist added.",
+    "importSuccess": "Playlist imported.",
     "confirmDelete": "Are you sure you want to delete \"{{name}}\"?",
     "confirm": "Confirm",
     "refresh": "Refresh",

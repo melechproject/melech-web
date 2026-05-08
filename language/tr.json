@@ -92,7 +92,7 @@
     "createFirst": "Önce bir çalma listesi oluşturun",
     "empty": "Çalma listesi boş",
     "importSongsSuccess": "Şarkılar başarıyla içeri aktarıldı.",
-    "importSuccess": "\"{{name}}\" listesi eklendi.",
+    "importSuccess": "Liste içeri aktarıldı.",
     "confirmDelete": "\"{{name}}\" çalma listesini silmek istediğinize emin misiniz?",
     "confirm": "Onayla",
     "refresh": "Yenile",
