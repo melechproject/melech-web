@@ -1,9 +1,10 @@
-const CACHE_NAME = "melech-v5";
+const CACHE_NAME = "melech-v6";
 const ASSETS = [
   "./",
   "./index.html",
   "./about/index.html",
-  "./manifest.json",
+  "./manifest-en.json",
+  "./manifest-tr.json",
   "./src/style.css",
   "./src/styles/navbarMenu.css",
   "./src/styles/playlist.css",

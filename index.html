@@ -28,7 +28,19 @@
         content="A free, open-source music player that works offline. No account, no tracking, no subscription.">
     <meta name="twitter:image" content="https://melech.xmeroriginals.com/resources/MelechCover.png">
 
-    <link rel="manifest" href="manifest.json">
+    <link id="manifest-link" rel="manifest" href="manifest-en.json">
+    <script>
+        (function () {
+            var lang = localStorage.getItem("melech-language");
+            if (!lang || lang === "auto") {
+                var browserLang = navigator.language || navigator.userLanguage || "en";
+                lang = browserLang.split("-")[0].toLowerCase();
+            }
+            if (lang === "tr") {
+                document.getElementById('manifest-link').href = "manifest-tr.json";
+            }
+        })();
+    </script>
     <meta name="theme-color" content="#140004">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">

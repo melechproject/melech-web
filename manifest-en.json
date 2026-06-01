@@ -1,0 +1,39 @@
+{
+  "name": "Melech",
+  "short_name": "Melech",
+  "description": "Your Music, Your Kingdom.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#140004",
+  "theme_color": "#800020",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "resources/192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "resources/512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Play a song",
+      "short_name": "Play Song",
+      "description": "Play a song on Melech",
+      "url": "/?playsong=true",
+      "icons": [{ "src": "resources/192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Play Favorites",
+      "short_name": "Favorites",
+      "description": "Play your favorite songs",
+      "url": "/?playfav=true",
+      "icons": [{ "src": "resources/192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

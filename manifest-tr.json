@@ -1,0 +1,39 @@
+{
+  "name": "Melech",
+  "short_name": "Melech",
+  "description": "Senin Müziğin, Senin Krallığın.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#140004",
+  "theme_color": "#800020",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "resources/192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "resources/512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Şarkı Oynat",
+      "short_name": "Şarkı Oynat",
+      "description": "Melech'te bir şarkı oynat",
+      "url": "/?playsong=true",
+      "icons": [{ "src": "resources/192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Beğenilenleri Oynat",
+      "short_name": "Beğenilenler",
+      "description": "Beğendiğin şarkıları oynat",
+      "url": "/?playfav=true",
+      "icons": [{ "src": "resources/192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

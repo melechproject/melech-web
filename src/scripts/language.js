@@ -106,6 +106,12 @@ class I18n {
     document.documentElement.lang = resolvedLang;
 
     this.applyTranslations();
+    
+    const manifestLink = document.getElementById("manifest-link");
+    if (manifestLink) {
+        manifestLink.href = resolvedLang === "tr" ? "manifest-tr.json" : "manifest-en.json";
+    }
+
     this.notifyListeners();
   }
 

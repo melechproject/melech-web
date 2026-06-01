@@ -2572,4 +2572,49 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const playSong = urlParams.get("playsong") === "true";
+  const playFav = urlParams.get("playfav") === "true";
+
+  if (playSong || playFav) {
+    const startPlaybackAction = async (e) => {
+      if (!e) await new Promise((r) => setTimeout(r, 1500));
+      try {
+        if (playFav && window.playlistManager) {
+          const favPlaylist = window.playlistManager.playlists.find(
+            (p) => p.id === "pl_favorites" || p.isFavorites,
+          );
+          if (favPlaylist && favPlaylist.trackIds.length > 0) {
+            await window.playlistManager.playPlaylist("pl_favorites");
+          } else {
+            console.log("No favorites found.");
+          }
+        } else if (playSong) {
+          let allTracks = [];
+          if (window.melechLibrary && window.melechLibrary.librarySongs) {
+            allTracks = window.melechLibrary.librarySongs;
+          }
+          if (allTracks.length > 0) {
+            const randomIndex = Math.floor(Math.random() * allTracks.length);
+            if (window.playTrack) {
+              await window.playTrack(allTracks[randomIndex]);
+            }
+          }
+        }
+      } catch (err) {
+        console.error(
+          "Auto playback failed, waiting for user interaction:",
+          err,
+        );
+        if (!e) {
+          document.addEventListener("click", startPlaybackAction, {
+            once: true,
+          });
+        }
+      }
+    };
+
+    startPlaybackAction();
+  }
 });
