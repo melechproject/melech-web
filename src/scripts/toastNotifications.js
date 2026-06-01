@@ -328,6 +328,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.ToastNotifications = ToastNotifications;
 
+window.showToast = function (
+  message,
+  type = "info",
+  duration = null,
+  options = {},
+) {
+  if (window.notifications) {
+    let notifOptions = { ...options };
+    if (duration) notifOptions.duration = duration;
+
+    switch (type) {
+      case "success":
+        window.notifications.success(message, notifOptions);
+        break;
+      case "error":
+        window.notifications.error(message, notifOptions);
+        break;
+      case "warning":
+        window.notifications.warning(message, notifOptions);
+        break;
+      default:
+        window.notifications.info(message, notifOptions);
+        break;
+    }
+  }
+};
+
 function melechConfirm(message, title = null, options = {}) {
   const {
     confirmText = "playlist.confirm",

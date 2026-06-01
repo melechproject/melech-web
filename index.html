@@ -1142,23 +1142,19 @@
                     const cacheNames = await caches.keys();
                     await Promise.all(cacheNames.map((name) => caches.delete(name)));
 
-                    if (window.showToast) {
-                        window.showToast(
+                    if (window.notifications) {
+                        window.notifications.success(
                             window.t?.("settings.cacheClearSuccess") ||
-                            "Cache cleared successfully, Refresh to get updates.",
-                            "success",
-                            3000,
+                            "Cache cleared successfully, Refresh to get updates."
                         );
                     }
 
                 } catch (err) {
                     console.error("Cache clear failed:", err);
-                    if (window.showToast) {
-                        window.showToast(
+                    if (window.notifications) {
+                        window.notifications.error(
                             window.t?.("settings.cacheClearError") ||
-                            "Could not clear cache. Please refresh the page.",
-                            "error",
-                            3000,
+                            "Could not clear cache. Please refresh the page."
                         );
                     }
                 }
