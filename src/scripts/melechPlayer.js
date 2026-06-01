@@ -2572,14 +2572,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-
   const urlParams = new URLSearchParams(window.location.search);
   const playSong = urlParams.get("playsong") === "true";
   const playFav = urlParams.get("playfav") === "true";
 
   if (playSong || playFav) {
-    const startPlaybackAction = async (e) => {
-      if (!e) await new Promise((r) => setTimeout(r, 1500));
+    const startPlaybackAction = async () => {
+      await new Promise((r) => setTimeout(r, 1500));
+      let attemptedPlay = false;
+
       try {
         if (playFav && window.playlistManager) {
           const favPlaylist = window.playlistManager.playlists.find(
@@ -2587,34 +2588,101 @@ document.addEventListener("DOMContentLoaded", () => {
           );
           if (favPlaylist && favPlaylist.trackIds.length > 0) {
             await window.playlistManager.playPlaylist("pl_favorites");
+            attemptedPlay = true;
           } else {
             console.log("No favorites found.");
           }
         } else if (playSong) {
-          let allTracks = [];
-          if (window.melechLibrary && window.melechLibrary.librarySongs) {
-            allTracks = window.melechLibrary.librarySongs;
-          }
-          if (allTracks.length > 0) {
-            const randomIndex = Math.floor(Math.random() * allTracks.length);
-            if (window.playTrack) {
-              await window.playTrack(allTracks[randomIndex]);
+          if (typeof window.togglePlay === "function") {
+            const wasPlaying =
+              typeof window.getIsPlaying === "function"
+                ? window.getIsPlaying()
+                : false;
+            if (!wasPlaying) {
+              await window.togglePlay();
+              attemptedPlay = true;
             }
           }
         }
-      } catch (err) {
-        console.error(
-          "Auto playback failed, waiting for user interaction:",
-          err,
-        );
-        if (!e) {
-          document.addEventListener("click", startPlaybackAction, {
-            once: true,
-          });
+
+        if (!attemptedPlay) return;
+
+        await new Promise((r) => setTimeout(r, 500));
+
+        const isCurrentlyPlaying =
+          typeof window.getIsPlaying === "function"
+            ? window.getIsPlaying()
+            : false;
+        const hasTrack =
+          typeof window.getCurrentTrack === "function"
+            ? !!window.getCurrentTrack()
+            : false;
+
+        if (!isCurrentlyPlaying && hasTrack) {
+          showAutoplayOverlay();
         }
+      } catch (err) {
+        console.error("PWA auto playback failed:", err);
       }
     };
 
     startPlaybackAction();
+  }
+
+  function showAutoplayOverlay() {
+    if (document.getElementById("pwa-autoplay-overlay")) return;
+
+    const overlay = document.createElement("div");
+    overlay.id = "pwa-autoplay-overlay";
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100vw";
+    overlay.style.height = "100vh";
+    overlay.style.backgroundColor = "rgba(20, 0, 4, 0.95)";
+    overlay.style.zIndex = "9999";
+    overlay.style.display = "flex";
+    overlay.style.flexDirection = "column";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.color = "white";
+    overlay.style.cursor = "pointer";
+    overlay.style.backdropFilter = "blur(15px)";
+
+    const text = document.createElement("h2");
+    text.style.fontSize = "22px";
+    text.style.fontWeight = "600";
+    text.style.textAlign = "center";
+    text.style.padding = "20px";
+    text.style.maxWidth = "80%";
+
+    const lang = window.i18n ? window.i18n.getCurrentLang() : "en";
+    text.textContent =
+      lang === "tr"
+        ? "Ses oynatmayı başlatmak için ekrana tıklamanız gerekiyor."
+        : "You need to tap the screen to start audio playback.";
+
+    const icon = document.createElement("span");
+    icon.className = "material-symbols-rounded";
+    icon.style.fontSize = "64px";
+    icon.style.display = "block";
+    icon.style.marginBottom = "15px";
+    icon.style.color = "var(--primary-color, #800020)";
+    icon.textContent = "play_circle";
+
+    overlay.appendChild(icon);
+    overlay.appendChild(text);
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener(
+      "click",
+      async () => {
+        overlay.remove();
+        if (typeof window.togglePlay === "function") {
+          await window.togglePlay();
+        }
+      },
+      { once: true },
+    );
   }
 });
